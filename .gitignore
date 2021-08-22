@@ -2,4 +2,5 @@
 /vendor
 /public
 /_phpcs.xml
+/Session.vim
 .phpunit.result.cache
