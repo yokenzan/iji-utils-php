@@ -1,0 +1,5 @@
+/.env
+/vendor
+/public
+/_phpcs.xml
+.phpunit.result.cache
