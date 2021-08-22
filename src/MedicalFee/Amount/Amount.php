@@ -65,11 +65,11 @@ class Amount implements Stringable
 
     public function applyBurden(float $burden): static
     {
-        return static::generate($this->amount, $burden);
+        return static::generate($this->amount * $burden);
     }
 
     public function __toString()
     {
-        return number_format($this->toInt());
+        return '\\' . number_format($this->toInt());
     }
 }
