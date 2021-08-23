@@ -1,0 +1,447 @@
+<?xml version="1.0"?>
+<!--
+    References:
+        - https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset
+        - https://github.com/squizlabs/PHP_CodeSniffer/wiki/Customisable-Sniff-Properties
+
+    Extended Rules:
+        - https://github.com/slevomat/coding-standard
+        - https://github.com/sirbrillig/phpcs-variable-analysis
+-->
+<ruleset name="MyPHPStandardRuleSet">
+    <description>My standard rules for PHP.</description>
+
+    <file>src</file>
+
+    <!--
+        based on PSR12
+    -->
+    <rule ref="PSR12">
+    </rule>
+
+    <!--
+        Laravel : クラスの命名規約を無視する
+    -->
+    <rule ref="Squiz.Classes.ValidClassName">
+    </rule>
+
+    <!--
+        Laravel : PSR1準拠の名前空間管理を除外する
+    -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+    </rule>
+
+    <!--
+        メソッド名がキャメルケースでなければならないルールを除外する
+    -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!--
+        変数展開(interpolation)がない場合は二重引用符を禁止する
+    -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar" />
+    </rule>
+
+    <!--
+        文字列連結演算子 `.` の左右にスペースを挿入する
+    -->
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing"        value="1" />
+            <property name="ignoreNewlines" value="true" />
+        </properties> </rule>
+
+    <!--
+        関数のプロトタイプ宣言が複数行にまたがる場合、一行一引数で記述する
+    -->
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.OneParamPerLine">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!--
+        行あたり文字数の上限を100字にする
+    -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <!-- 警告値 -->
+            <property name="lineLimit"         value="100" />
+            <!-- 禁止値 -->
+            <property name="absoluteLineLimit" value="100" />
+        </properties>
+    </rule>
+
+    <!--
+        ネストしたfor文のカウンタ変数の混在を禁止する
+
+        Ex.)
+            for ($i = 1; $i < 10; $i++) {
+                // $i++ を $j++ の誤記と見なす
+                for ($j = 1; $j < 10; $i++) {
+                }
+            }
+    -->
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer">
+    </rule>
+
+    <!--
+        PHP4式のコンストラクタを禁止する
+    -->
+    <rule ref="Generic.NamingConventions.ConstructorName">
+    </rule>
+
+    <!--
+        GOTOを禁止する
+    -->
+    <rule ref="Generic.PHP.DiscourageGoto">
+    </rule>
+
+    <rule ref="Generic.PHP.DeprecatedFunctions">
+    </rule>
+
+    <!--
+        一部の関数の使用を禁止する
+
+        - 型キャストの記法
+        - デバッグ関数を残したままのコミットの禁止
+
+        デバッグ用の関数の消し忘れまたはコメントアウト漏れ検知
+    -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <!-- debug funcitons -->
+                <element key="print_r"                value="null" />
+                <element key="var_dump"               value="null" />
+                <element key="print"                  value="null" />
+                <element key="echo"                   value="null" />
+                <element key="dump"                   value="null" />
+                <element key="debug"                  value="null" />
+                <element key="dd"                     value="null" />
+                <element key="debug_print_backtrace"  value="null" />
+                <element key="debug_backtrace"        value="null" />
+                <!-- hash funcitons -->
+                <element key="bcrypt"                 value="Hash::make" />
+                <!-- type cast funcitons -->
+                <element key="strval"                 value="null" />
+                <element key="intval"                 value="null" />
+                <element key="boolval"                value="null" />
+                <element key="floatval"               value="null" />
+                <element key="settype"                value="null" />
+            </property>
+         </properties>
+    </rule>
+
+    <!--
+        空行関連
+    -->
+
+    <!--
+        メソッドや関数定義間の空行数
+    -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing"            value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+            <property name="spacingAfterLast"   value="0" />
+        </properties>
+    </rule>
+
+    <!--
+        空白関連
+    -->
+
+    <!--
+        型キャストのあとのスペースを禁止する
+
+        - 型キャストの記法
+    -->
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
+
+    <!--
+        `!`のあとのスペースを禁止する
+    -->
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
+
+    <!--
+        スペースによる左揃えを禁止する
+    -->
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <properties>
+            <property name="ignoreSpacingBeforeAssignments" value="true" />
+            <property name="ignoreNewlines"                 value="true" />
+        </properties>
+    </rule>
+
+    <!--
+        `->`演算子前後の空白を禁止する
+
+        ただし、改行は許容する
+    -->
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing.Before">
+    </rule>
+
+    <!--
+        デフォルト引数の代入式にスペース挿入を強制する
+    -->
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <properties>
+            <property name="equalsSpacing" value="1" />
+        </properties>
+
+        <!--
+            スペースによるアラインメントを許容する
+        -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterHint" />
+    </rule>
+
+     <!--
+         引数の左揃えを許容する
+     -->
+     <rule ref="Generic.Functions.FunctionCallArgumentSpacing">
+         <exclude name="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma" />
+     </rule>
+ 
+     <!--
+         プロパティの左揃えを許容する
+     -->
+     <rule ref="PSR2.Classes.PropertyDeclaration">
+         <exclude name="PSR2.Classes.PropertyDeclaration.SpacingAfterType" />
+     </rule>
+
+     <rule ref="Generic.Formatting.MultipleStatementAlignment">
+         <properties>
+             <property name="maxPadding" value="20" />
+         </properties>
+     </rule>
+
+    <!--
+        複雑さの指標関連
+    -->
+
+    <!--
+        ネスト数の制限
+    -->
+    <rule ref="Generic.Metrics.NestingLevel">
+        <properties>
+            <property name="nestingLevel"         value="3" />
+            <property name="absoluteNestingLevel" value="5" />
+        </properties>
+    </rule>
+
+    <!--
+        循環的複雑度の制限
+    -->
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <properties>
+            <property name="complexity"         value="10" />
+            <property name="absoluteComplexity" value="20" />
+        </properties>
+    </rule>
+
+    <!--
+        https://github.com/slevomat/coding-standard
+    -->
+
+    <!--
+        プロパティの型指定漏れの検知
+        Docコメントよりもコード上の型宣言を優先する
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!--
+        引数の型指定漏れの検知
+        Docコメントよりもコード上の型宣言を優先する
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!--
+        戻り値の型指定漏れの検知
+        Docコメントよりもコード上の型宣言を優先する
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!--
+        null合体演算子の優先利用
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator">
+    </rule>
+
+    <!--
+        null合体代入演算子の優先利用
+    -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator">
+    </rule>
+
+    <!--
+        `==`による緩い比較を禁止する
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators">
+    </rule>
+
+    <!--
+        使われていないuse文の検出
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+    </rule>
+
+    <!--
+        同じ名前空間のクラスはuseしない
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace">
+    </rule>
+
+    <!--
+        クラスメンバの記載順
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Classes.ClassStructure">
+        <exclude-pattern>tests/*</exclude-pattern>
+        <properties>
+            <property name="groups" type="array">
+                <!-- use statements -->
+                <element value="uses" />
+                <!-- abstract static methods -->
+                <element value="public static abstract methods" />
+                <element value="protected static abstract methods" />
+                <!-- abstract methods -->
+                <element value="public abstract methods" />
+                <element value="protected abstract methods" />
+                <!-- constants -->
+                <element value="public constants" />
+                <element value="protected constants" />
+                <element value="private constants" />
+                <!-- static properties -->
+                <element value="public static properties" />
+                <element value="protected static properties" />
+                <element value="private static properties" />
+                <!-- static methods -->
+                <element value="static constructors" />
+                <element value="public static methods" />
+                <element value="protected static methods" />
+                <element value="private static methods" />
+                <!-- instance properties -->
+                <element value="public properties" />
+                <element value="protected properties" />
+                <element value="private properties" />
+                <!-- instance methods -->
+                <element value="constructor" />
+                <element value="public methods" />
+                <element value="protected methods" />
+                <element value="private methods" />
+                <!-- special methods -->
+                <element value="magic methods" />
+                <element value="destructor" />
+            </property>
+        </properties>
+    </rule>
+
+    <!--
+        use文はアルファベット順に並べる
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+    </rule>
+
+    <!--
+        型宣言は短い記法を使う
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints">
+    </rule>
+
+    <!--
+        キャストの型宣言は短い記法を使う
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast">
+    </rule>
+
+    <!--
+        定数の可視性の明示を強制
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility">
+    </rule>
+
+    <!--
+        メソッドの戻り値の型宣言の書式を設定(リンク参照)
+
+        自動修正可
+
+        @link https://github.com/slevomat/coding-standard#slevomatcodingstandardtypehintsreturntypehintspacing-
+    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing">
+    </rule>
+
+    <!--
+        一部のDocコメントのアノテーションを禁止
+
+        自動修正可
+    -->
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array">
+                <element value="@author" />
+                <element value="@copyright" />
+                <element value="@created" />
+                <element value="@example" />
+                <element value="@license" />
+                <element value="@package" />
+                <element value="@since" />
+            </property>
+        </properties>
+    </rule>
+
+    <!--
+        https://github.com/sirbrillig/phpcs-variable-analysis
+    -->
+
+    <!--
+        使われていない引数の検出
+    -->
+    <rule ref="VariableAnalysis.CodeAnalysis.VariableAnalysis">
+        <properties>
+            <property name="ignoreUnusedRegexp" value="/\A_/" />
+        </properties>
+    </rule>
+</ruleset>
