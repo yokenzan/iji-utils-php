@@ -14,8 +14,6 @@ class Amount implements Stringable
      */
     private const CONVERSION_RATE_FROM_POINT = 10;
 
-    protected float $amount;
-
     public static function generate(int|float $amount): static
     {
         return new static($amount);
@@ -27,6 +25,8 @@ class Amount implements Stringable
             $point->toInt() * self::CONVERSION_RATE_FROM_POINT * $burden
         );
     }
+
+    protected float $amount;
 
     final public function __construct(int|float $amount)
     {
@@ -56,6 +56,13 @@ class Amount implements Stringable
     public function sub(self $other): static
     {
         return static::generate($this->amount - $other->amount);
+    }
+
+    public function isGreaterThan(self $other, bool $orEquals = false)
+    {
+        return $orEquals
+            ? $this->toFloat() >= $other->toFloat()
+            : $this->toFloat() > $other->toFloat();
     }
 
     public function divideBy(int $diviser): static

@@ -8,25 +8,28 @@ use Stringable;
 
 class Point implements Stringable
 {
-    protected int $point;
-
     public static function generate(int|float $point): static
     {
         return new static((int)$point);
     }
+
+    protected int $point;
 
     final public function __construct(int $point)
     {
         $this->point = $point;
     }
 
-    public function __toString()
-    {
-        return number_format($this->toInt());
-    }
-
     public function toInt(): int
     {
         return (int)$this->point;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return number_format($this->toInt());
     }
 }
