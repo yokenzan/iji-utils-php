@@ -9,20 +9,21 @@ if filereadable(getcwd() . '/vendor/bin/phpcs')
                 \ }
 
     let g:ale_php_phpcs_executable  = getcwd() . '/vendor/bin/phpcs'
-    if filereadable(getcwd() . '/phpcs.xml')
-        let g:ale_php_phpcs_standard    = getcwd() . '/phpcs.xml'
-    else
-        let g:ale_php_phpcs_standard    = 'PSR12'
-    endif
     let g:ale_php_phpcbf_executable = getcwd() . '/vendor/bin/phpcbf'
-    let g:ale_php_phpcbf_standard   = g:ale_php_phpcs_standard
+
+    if filereadable(getcwd() . '/phpcs.xml')
+        let g:ale_php_phpcs_standard = getcwd() . '/phpcs.xml'
+    else
+        let g:ale_php_phpcs_standard = 'PSR12'
+    endif
+    let g:ale_php_phpcbf_standard = g:ale_php_phpcs_standard
 endif
 
 
 if filereadable(getcwd() . '/vendor/bin/phpstan')
     call add(g:ale_linters.php, 'phpstan')
 
-    let g:ale_php_phpstan_executable  = getcwd() . '/vendor/bin/phpstan'
+    let g:ale_php_phpstan_executable = getcwd() . '/vendor/bin/phpstan'
 endif
 
 
