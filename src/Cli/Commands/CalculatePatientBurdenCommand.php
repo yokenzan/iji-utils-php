@@ -41,18 +41,18 @@ class CalculatePatientBurdenCommand extends Command
      */
     protected function configure(): void
     {
-        $this->addArgument('point', InputArgument::REQUIRED, 'medical fee point');
+        $this->addArgument('point', InputArgument::REQUIRED, '請求点数を指定します。');
 
         // option "n" is reserved for "no-interaction"
         $this
-            ->addOption('patient-age',            'a', InputOption::VALUE_REQUIRED, 'age of patient.')
-            ->addOption('patient-birth-date',     'd', InputOption::VALUE_REQUIRED, 'birth date of patient.')
-            ->addOption('patient-is-elderly',     'e', InputOption::VALUE_NONE,     'use if patient is 70 years old or over.')
-            ->addOption('patient-burden-rate',    'r', InputOption::VALUE_REQUIRED, 'patient burden rate with percentage. e.g. 0.3 as 30%')
-            ->addOption('kogaku-classification',  'c', InputOption::VALUE_REQUIRED, 'income classification of gendogaku ninteisho.')
-            ->addOption('kogaku-is-reduced',      'R', InputOption::VALUE_NONE,     'use if gendogaku ninteisho is 多数回該当.')
-            ->addOption('nyuin',                  'N', InputOption::VALUE_NONE,     'use if is in nyuin situation.')
-            ->addOption('comma-separated-amount', 'C', InputOption::VALUE_NONE,     'show result burden amount formatted as comma separated format.')
+            ->addOption('patient-age',            'a', InputOption::VALUE_REQUIRED, '患者年齢を指定します。')
+            ->addOption('patient-birth-date',     'd', InputOption::VALUE_REQUIRED, '患者生年月日を指定します。')
+            ->addOption('patient-is-elderly',     'e', InputOption::VALUE_NONE,     '患者が70歳以上の場合に指定します。.')
+            ->addOption('patient-burden-rate',    'r', InputOption::VALUE_REQUIRED, '患者定率負担割合を小数表記で指定します。')
+            ->addOption('kogaku-classification',  'c', InputOption::VALUE_REQUIRED, '高額療養費・限度額認定証の所得区分を指定します。')
+            ->addOption('kogaku-is-reduced',      'R', InputOption::VALUE_NONE,     '高額療養費の多数回該当である場合に指定します。')
+            ->addOption('nyuin',                  'N', InputOption::VALUE_NONE,     '入院レセプトである場合に指定します。')
+            ->addOption('comma-separated-amount', 'C', InputOption::VALUE_NONE,     '計算結果をカンマ区切りで出力する場合に指定します。')
         ;
     }
 
@@ -78,7 +78,7 @@ class CalculatePatientBurdenCommand extends Command
             : null;
 
         $classification = $input->getOption('kogaku-classification');
-        $isNyuin        = $input->getOption('nyuin') ?? false;
+        $isNyuin        = $input->getOption('nyuin');
         $isReduced      = $input->getOption('kogaku-is-reduced');
 
         $showWithCommaSeparated = $input->getOption('comma-separated-amount');
