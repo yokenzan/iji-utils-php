@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use DI\Container;
+use IjiUtils\Cli\Commands\CalculatePatientBurdenCommand;
+use IjiUtils\Cli\Commands\ShowIncomeClassificationsCommand;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassification;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttributeMaster;
+use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application;
+
+/* not for applying DIP, but for lazy to write initialization code */
+$container = new Container();
+/* to use as singleton */
+$container->set(
+    IncomeClassificationAttributeMaster::class,
+    new IncomeClassificationAttributeMaster()
+);
+$container->set(
+    HandlerInterface::class,
+    new StreamHandler(STDERR, Logger::ERROR)
+);
+$container->set(
+    LoggerInterface::class,
+    new Logger('std', [$container->get(HandlerInterface::class)])
+);
+
+$application = new Application('iji-util-php');
+$application->add($container->get(CalculatePatientBurdenCommand::class));
+$application->add($container->get(ShowIncomeClassificationsCommand::class));
+$application->run();
