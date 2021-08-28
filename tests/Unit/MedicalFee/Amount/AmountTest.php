@@ -22,7 +22,7 @@ class AmountTest extends TestCase
 
     public function testIsStringable()
     {
-        $this->assertEquals('1,000', (string)Amount::generate(1000));
+        $this->assertEquals('\\1,000', (string)Amount::generate(1000));
     }
 
     public function testCanConvertIntoInteger()
@@ -72,8 +72,8 @@ class AmountTest extends TestCase
 
     public function testFloatValueIsStringableFloatValueWithHalfUpped()
     {
-        $this->assertEquals('1,000', (string)Amount::generate(1000.4));
-        $this->assertEquals('1,001', (string)Amount::generate(1000.5));
+        $this->assertEquals('\\1,000', (string)Amount::generate(1000.4));
+        $this->assertEquals('\\1,001', (string)Amount::generate(1000.5));
     }
 
     public function testInternalFloatValueIsNotChangedWhenConvertedIntoFloat()
