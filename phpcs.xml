@@ -67,9 +67,9 @@
     <rule ref="Generic.Files.LineLength">
         <properties>
             <!-- 警告値 -->
-            <property name="lineLimit"         value="100" />
+            <property name="lineLimit"         value="120" />
             <!-- 禁止値 -->
-            <property name="absoluteLineLimit" value="100" />
+            <property name="absoluteLineLimit" value="120" />
         </properties>
     </rule>
 

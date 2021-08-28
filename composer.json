@@ -1,5 +1,5 @@
 {
-    "name": "yosuke/iji-utils-php",
+    "name": "yokenzan/iji-utils-php",
     "type": "library",
     "require": {
         "php-ds/php-ds": "^1.3",
@@ -52,7 +52,7 @@
             "vendor/bin/phpcbf --standard=./phpcs.xml src"
         ],
         "lint:stan": [
-            "vendor/bin/phpstan analyze"
+            "vendor/bin/phpstan analyze src"
         ]
     }
 }
