@@ -12,8 +12,17 @@ class IncomeClassificationAttributeMaster
     private const KOGAKU_COUNT_IS_REDUCED = 'reduced';
     private const KOGAKU_COUNT_IS_NORMAL  = 'normal';
 
+    /**
+     * @property Map<string, Map<string, IncomeClassificationAttribute>> $nonElderlyIncomeClassifications
+     */
     private Map $nonElderlyIncomeClassifications;
+    /**
+     * @property Map<string, Map<string, IncomeClassificationAttribute>> $elderlyIncomeClassifications
+     */
     private Map $elderlyIncomeClassifications;
+    /**
+     * @property Map<string, string> $elderlyClassificationKeys
+     */
     private Map $classificationKeys;
 
     public function __construct()

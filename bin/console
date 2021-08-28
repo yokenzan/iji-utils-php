@@ -8,7 +8,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use DI\Container;
 use IjiUtils\Cli\Commands\CalculatePatientBurdenCommand;
 use IjiUtils\Cli\Commands\ShowIncomeClassificationsCommand;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassification;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttributeMaster;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;

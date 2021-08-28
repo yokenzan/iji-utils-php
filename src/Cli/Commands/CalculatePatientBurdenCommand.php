@@ -44,6 +44,7 @@ class CalculatePatientBurdenCommand extends Command
         $this->addArgument('point', InputArgument::REQUIRED, '請求点数を指定します。');
 
         // option "n" is reserved for "no-interaction"
+
         $this
             ->addOption('patient-age',            'a', InputOption::VALUE_REQUIRED, '患者年齢を指定します。')
             ->addOption('patient-birth-date',     'd', InputOption::VALUE_REQUIRED, '患者生年月日を指定します。')
@@ -59,7 +60,7 @@ class CalculatePatientBurdenCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $_output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /**
          * parse given parametors
@@ -98,8 +99,10 @@ class CalculatePatientBurdenCommand extends Command
 
         $result = $this->calculator->calculate($this->parameterBuilder->build());
 
-        $_output->writeln(
-            $showWithCommaSeparated ? $result->getAmount() : $result->getAmount()->toInt()
+        $output->writeln(
+            $showWithCommaSeparated
+            ? (string)$result->getAmount()
+            : (string)$result->getAmount()->toInt()
         );
 
         return Command::SUCCESS;

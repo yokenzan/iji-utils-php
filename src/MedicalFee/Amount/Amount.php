@@ -58,7 +58,7 @@ class Amount implements Stringable
         return static::generate($this->amount - $other->amount);
     }
 
-    public function isGreaterThan(self $other, bool $orEquals = false)
+    public function isGreaterThan(self $other, bool $orEquals = false): bool
     {
         return $orEquals
             ? $this->toFloat() >= $other->toFloat()
@@ -75,6 +75,9 @@ class Amount implements Stringable
         return static::generate($this->amount * $burden);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return '\\' . number_format($this->toInt());
