@@ -18,10 +18,12 @@ $ composer install
 
 ### サブコマンド `calc:burden`
 
+To show all options or arguments, run `calc:burden --help`.
+
 ```bash
 # 請求点数30,000点
-# (初期値補填 : 患者定率負担割合3割)
-# (初期値補填 : 高額療養費所得区分ナシ)
+# (補完 : 患者定率負担割合3割)
+# (補完 : 高額療養費所得区分ナシ)
 $ bin/console calc:burden 30000
 # => 90000
 ```
@@ -30,7 +32,7 @@ $ bin/console calc:burden 30000
 # 請求点数30,000点
 # 患者定率負担割合3割
 # 高額療養費所得区分ウ
-# (初期値補填 : 患者年齢区分70歳未満)
+# (補完 : 患者年齢区分70歳未満)
 $ bin/console calc:burden \
   --patient-burden-rate=.3 \
   --kogaku-classification=u \
@@ -40,9 +42,10 @@ $ bin/console calc:burden \
 
 ```bash
 # 請求点数100,000点
-# 患者年齢71歳(高齢受給者2割)
+# 患者年齢71歳(高齢受給者)
 # 高額療養費所得区分現役並みⅢ
 # 高額療養費多数回該当
+# (補完 : 患者定率負担割合3割)
 $ bin/console calc:burden 100000 \
   --patient-age=71 \
   --kogaku-classification=upper-3 \
