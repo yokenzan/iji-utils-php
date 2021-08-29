@@ -21,7 +21,7 @@ class GenerationClassification extends Enum
     private const EARLY_ELDERLY = '高齢受給者';
     private const LATE_ELDERLY  = '後期高齢者';
 
-    private const DEFAULT_BURDEN_RATE = [
+    private static $DEFAULT_BURDEN_RATE = [
         self::NORMAL        => 0.3,
         self::PRESCHOOL     => 0.2,
         self::EARLY_ELDERLY => 0.2,
@@ -47,7 +47,7 @@ class GenerationClassification extends Enum
 
     public function getDefaultBurdenRate(): float
     {
-        return self::DEFAULT_BURDEN_RATE[$this->getValue()];
+        return self::$DEFAULT_BURDEN_RATE[$this->getValue()];
     }
 
     /**

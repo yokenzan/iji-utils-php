@@ -23,7 +23,7 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
     private const E = 'e';
     private const O = 'o';
 
-    private const NAMES = [
+    private static $NAMES = [
         self::A => '区分ア',
         self::I => '区分イ',
         self::U => '区分ウ',
@@ -36,7 +36,7 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
      */
     public function getName(): string
     {
-        return self::NAMES[$this->getValue()];
+        return self::$NAMES[$this->getValue()];
     }
 
     /**

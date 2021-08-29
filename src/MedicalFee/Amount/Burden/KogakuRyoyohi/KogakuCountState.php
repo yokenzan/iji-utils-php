@@ -17,14 +17,14 @@ class KogakuCountState extends Enum
     private const NORMAL  = 'normal';
     private const REDUCED = 'reudced';
 
-    private const NAMES = [
+    private static $NAMES = [
         self::NORMAL  => '通常回',
         self::REDUCED => '多数回',
     ];
 
     public function getName(): string
     {
-        return self::NAMES[$this->getValue()];
+        return self::$NAMES[$this->getValue()];
     }
 
     public function isReduced(): bool
