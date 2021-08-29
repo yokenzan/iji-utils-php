@@ -18,8 +18,6 @@ use Psr\Log\LoggerInterface;
 
 class CalculatorParameterBuilder
 {
-    public const DEFAULT_PATIENT_BURDEN_RATE = 0.3;
-
     public Nyugai                   $nyugai;
     public ?Point                   $point;
     public ?DateTimeInterface       $patientBirthDate;
