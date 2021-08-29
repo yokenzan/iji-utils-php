@@ -27,7 +27,7 @@ class CalculatorParameterBuilder
     public ?string                  $incomeClassificationKey;
     public GenerationClassification $generationClassification;
     public ?float                   $burden;
-    public KogakuCountState         $kogakuCountState;
+    public ?KogakuCountState        $kogakuCountState;
 
     private IncomeClassificationAttributeMaster $classificationMaster;
     private LoggerInterface                     $logger;
@@ -82,7 +82,7 @@ class CalculatorParameterBuilder
         return $parameter;
     }
 
-    private function clearState(): void
+    public function clearState(): void
     {
         $this->point                    = null;
         $this->burden                   = null;
@@ -93,6 +93,7 @@ class CalculatorParameterBuilder
         $this->generationClassification = GenerationClassification::NORMAL();
         $this->incomeClassification     = null;
         $this->incomeClassificationKey  = null;
+        $this->kogakuCountState         = null;
     }
 
     private function detectStandardDate(): void
@@ -122,20 +123,14 @@ class CalculatorParameterBuilder
             ? $this->standardDate->diff($this->patientBirthDate)->y
             : null;
 
-        if (is_null($this->patientAge)) {
-            $this->generationClassification =
-                $this->incomeClassification?->isElderly()
-                    ? GenerationClassification::LATE_ELDERLY()
-                    : GenerationClassification::NORMAL();
-            return;
+        if (!is_null($this->patientAge)) {
+            $this->generationClassification = match (true) {
+                $this->patientAge >= 75 => GenerationClassification::LATE_ELDERLY(),
+                $this->patientAge >= 70 => GenerationClassification::EARLY_ELDERLY(),
+                $this->patientAge <= 6  => GenerationClassification::PRESCHOOL(),
+                default                 => GenerationClassification::NORMAL(),
+            };
         }
-
-        $this->generationClassification = match (true) {
-            $this->patientAge >= 75 => GenerationClassification::LATE_ELDERLY(),
-            $this->patientAge >= 70 => GenerationClassification::EARLY_ELDERLY(),
-            $this->patientAge <= 6  => GenerationClassification::PRESCHOOL(),
-            default                 => GenerationClassification::NORMAL(),
-        };
     }
 
     private function detectBurden(): void
