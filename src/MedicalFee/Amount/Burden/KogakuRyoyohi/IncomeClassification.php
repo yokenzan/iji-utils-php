@@ -11,4 +11,18 @@ interface IncomeClassification
     public function isElderly(): bool;
 
     public function isComparableToNonEldery(): bool;
+
+    // phpcs:disable SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+
+    /**
+     * @return string
+     */
+    public function getValue();
+
+    /**
+     * @return string
+     */
+    public function getKey();
+
+    // phpcs:enable SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 }

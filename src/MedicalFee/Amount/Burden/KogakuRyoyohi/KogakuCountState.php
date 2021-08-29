@@ -17,7 +17,10 @@ class KogakuCountState extends Enum
     private const NORMAL  = 'normal';
     private const REDUCED = 'reudced';
 
-    private static $NAMES = [
+    /**
+     * @var array<string, string>
+     */
+    private static array $NAMES = [
         self::NORMAL  => '通常回',
         self::REDUCED => '多数回',
     ];

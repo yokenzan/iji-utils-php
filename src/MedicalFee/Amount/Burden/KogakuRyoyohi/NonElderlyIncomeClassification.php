@@ -23,7 +23,10 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
     private const E = 'e';
     private const O = 'o';
 
-    private static $NAMES = [
+    /**
+     * @var array<string, string>
+     */
+    private static array $NAMES = [
         self::A => '区分ア',
         self::I => '区分イ',
         self::U => '区分ウ',

@@ -15,11 +15,11 @@ use InvalidArgumentException;
 class IncomeClassificationAttributeMaster
 {
     /**
-     * @property Map<string, Map<string, Attribute>> $nonElderlyIncomeClassifications
+     * @var Map<string, Map<string, Map<string, Attribute>>>
      */
     private Map $nonElderlyMaster;
     /**
-     * @property Map<string, Map<string, Attribute>> $elderlyIncomeClassifications
+     * @var Map<string, Map<string, Map<string, Attribute>>>
      */
     private Map $elderlyMaster;
 
@@ -155,8 +155,15 @@ class IncomeClassificationAttributeMaster
         $this->addIncomeClassifications($nyuinReducedParameters, true, $nyuinKey, $reducedState);
     }
 
-    private function addIncomeClassifications(array $arrayOfParameters, bool $isElderly, string $nyugaiKey, string $countStateKey): void
-    {
+    /**
+     * @param array<string, null|Elderly|int> $arrayOfParameters
+     */
+    private function addIncomeClassifications(
+        array  $arrayOfParameters,
+        bool   $isElderly,
+        string $nyugaiKey,
+        string $countStateKey
+    ): void {
         $table = ($isElderly ? $this->elderlyMaster : $this->nonElderlyMaster)
             ->get($nyugaiKey)
             ->get($countStateKey);

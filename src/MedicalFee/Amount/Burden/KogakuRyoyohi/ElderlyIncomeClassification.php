@@ -25,7 +25,10 @@ class ElderlyIncomeClassification extends Enum implements IncomeClassification
     private const LOWER_2 = 'lower-2';
     private const LOWER_1 = 'lower-1';
 
-    private static $NAMES = [
+    /**
+     * @var array<string, string>
+     */
+    private static array $NAMES = [
         self::UPPER_3 => '現役並みⅢ',
         self::UPPER_2 => '現役並みⅡ',
         self::UPPER_1 => '現役並みⅠ',

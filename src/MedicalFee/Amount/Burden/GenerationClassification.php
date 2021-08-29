@@ -21,7 +21,10 @@ class GenerationClassification extends Enum
     private const EARLY_ELDERLY = '高齢受給者';
     private const LATE_ELDERLY  = '後期高齢者';
 
-    private static $DEFAULT_BURDEN_RATE = [
+    /**
+     * @var array<string, float>
+     */
+    private static array $DEFAULT_BURDEN_RATE = [
         self::NORMAL        => 0.3,
         self::PRESCHOOL     => 0.2,
         self::EARLY_ELDERLY => 0.2,
