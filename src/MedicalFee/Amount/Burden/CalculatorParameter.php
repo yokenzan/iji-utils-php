@@ -7,8 +7,9 @@ namespace IjiUtils\MedicalFee\Amount\Burden;
 use DateTimeInterface;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
 use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use JsonSerializable;
 
-class CalculatorParameter
+class CalculatorParameter implements JsonSerializable
 {
     private DateTimeInterface                $standardDate;
     private RateBasedCalculatorParameter     $rateBasedCalculatorParameter;
@@ -42,5 +43,13 @@ class CalculatorParameter
     public function hasKogaku(): bool
     {
         return !is_null($this->getKogakuRyoyohiParameter()->getIncomeClassification());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

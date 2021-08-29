@@ -34,6 +34,9 @@ class ElderlyIncomeClassification extends Enum implements IncomeClassification
         self::LOWER_1 => '低所得Ⅰ',
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(): string
     {
         return self::NAMES[$this->getValue()];
@@ -50,5 +53,16 @@ class ElderlyIncomeClassification extends Enum implements IncomeClassification
     public function isComparableToNonEldery(): bool
     {
         return str_starts_with($this->getValue(), 'upper');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'value' => $this->getValue(),
+            'name'  => $this->getName(),
+        ];
     }
 }

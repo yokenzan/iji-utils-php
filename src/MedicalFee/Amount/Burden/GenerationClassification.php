@@ -49,4 +49,15 @@ class GenerationClassification extends Enum
     {
         return self::DEFAULT_BURDEN_RATE[$this->getValue()];
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'key'   => $this->getKey(),
+            'value' => $this->getValue(),
+        ];
+    }
 }

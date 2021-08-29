@@ -7,8 +7,9 @@ namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
 use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
 use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
+use JsonSerializable;
 
-class CalculatorParameter
+class CalculatorParameter implements JsonSerializable
 {
     private Nyugai                   $nyugai;
     private GenerationClassification $generationClassification;
@@ -63,5 +64,13 @@ class CalculatorParameter
     public function getCountState(): ?KogakuCountState
     {
         return $this->countState;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

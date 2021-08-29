@@ -7,8 +7,9 @@ namespace IjiUtils\MedicalFee\Amount\Burden;
 use IjiUtils\MedicalFee\Amount\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
 use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorResult as RateBasedCalculatorResult;
+use JsonSerializable;
 
-class CalculatorResult
+class CalculatorResult implements JsonSerializable
 {
     private CalculatorParameter            $parameter;
     private RateBasedCalculatorResult      $rateBasedResult;
@@ -64,5 +65,13 @@ class CalculatorResult
     public function isKogakuApplied(): bool
     {
         return $this->isKogakuApplied;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

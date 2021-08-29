@@ -31,6 +31,9 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
         self::O => '区分オ',
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(): string
     {
         return self::NAMES[$this->getValue()];
@@ -44,8 +47,22 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isComparableToNonEldery(): bool
     {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'value' => $this->getValue(),
+            'name'  => $this->getName(),
+        ];
     }
 }

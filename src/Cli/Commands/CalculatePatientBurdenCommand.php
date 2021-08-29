@@ -12,6 +12,7 @@ use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\KogakuCountState;
 use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,12 +30,16 @@ class CalculatePatientBurdenCommand extends Command
 
     private CalculatorParameterBuilder $parameterBuilder;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         Calculator                 $calculator,
-        CalculatorParameterBuilder $parameterBuilder
+        CalculatorParameterBuilder $parameterBuilder,
+        LoggerInterface            $logger
     ) {
         $this->calculator       = $calculator;
         $this->parameterBuilder = $parameterBuilder;
+        $this->logger           = $logger;
 
         parent::__construct();
     }
@@ -109,7 +114,10 @@ class CalculatePatientBurdenCommand extends Command
         $this->parameterBuilder->generationClassification = $generationClassification;
         $this->parameterBuilder->incomeClassificationKey  = $classificationKey;
 
-        $result = $this->calculator->calculate($this->parameterBuilder->build());
+        $result = $this->calculator->calculate($parameter = $this->parameterBuilder->build());
+
+        $this->logger->debug('calculation information', ['parameter' => $parameter]);
+        $this->logger->debug('calculation information', ['result'    => $result]);
 
         $output->writeln(
             $showWithCommaSeparated

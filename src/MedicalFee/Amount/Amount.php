@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount;
 
 use IjiUtils\MedicalFee\Point\Point;
+use JsonSerializable;
 use Stringable;
 
-class Amount implements Stringable
+class Amount implements Stringable, JsonSerializable
 {
     /**
      * 点→円の換算乗数
@@ -73,6 +74,18 @@ class Amount implements Stringable
     public function applyBurden(float $burden): static
     {
         return static::generate($this->amount * $burden);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'int_value'   => $this->toInt(),
+            'float_value' => $this->toFloat(),
+            'formatted'   => (string)$this,
+        ];
     }
 
     /**

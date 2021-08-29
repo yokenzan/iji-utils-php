@@ -6,6 +6,8 @@ namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
 
 interface IncomeClassification
 {
+    public function getName(): string;
+
     public function isElderly(): bool;
 
     public function isComparableToNonEldery(): bool;

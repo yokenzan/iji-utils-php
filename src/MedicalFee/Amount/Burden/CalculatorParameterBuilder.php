@@ -155,7 +155,7 @@ class CalculatorParameterBuilder
             $this->logger->debug('所得区分現役並みのため自動設定', [
                 'patient burden rate' => $this->burden,
             ]);
-            $this->burden = 0.3;
+            $this->burden = GenerationClassification::NORMAL()->getDefaultBurdenRate();
             return;
         }
 

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount\Burden\RateBased;
 
 use IjiUtils\MedicalFee\Point\Point;
+use JsonSerializable;
 
-class CalculatorParameter
+class CalculatorParameter implements JsonSerializable
 {
     private Point $point;
 
@@ -26,5 +27,13 @@ class CalculatorParameter
     public function getBurden(): float
     {
         return $this->burden;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }
