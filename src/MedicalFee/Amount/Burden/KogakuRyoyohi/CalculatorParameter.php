@@ -4,43 +4,40 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
 
+use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
+use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
 
 class CalculatorParameter
 {
-    private string $nyugai;
-    private ?string $incomeClassification;
-    private bool $isReduced;
-    private ?bool $isElderly;
-    private Point $point;
+    private Nyugai                   $nyugai;
+    private GenerationClassification $generationClassification;
+    private Point                    $point;
+    private ?IncomeClassification    $incomeClassification;
+    private ?KogakuCountState        $countState;
 
     public function __construct(
-        Point $point,
-        ?string $incomeClassification,
-        string $nyugai = 'gairai',
-        bool $isReduced = false,
-        ?bool $isElderly = null,
+        Nyugai                   $nyugai,
+        Point                    $point,
+        GenerationClassification $generationClassification,
+        ?IncomeClassification    $incomeClassification = null,
+        ?KogakuCountState        $countState = null,
     ) {
-        $this->point                = $point;
-        $this->incomeClassification = $incomeClassification;
-        $this->nyugai               = $nyugai;
-        $this->isReduced            = $isReduced;
-        $this->isElderly            = $isElderly;
+        $this->nyugai                   = $nyugai;
+        $this->point                    = $point;
+        $this->generationClassification = $generationClassification;
+        $this->incomeClassification     = $incomeClassification;
+        $this->countState               = $countState;
     }
 
-    public function getNyugai(): string
+    public function getNyugai(): Nyugai
     {
-        return str_starts_with($this->nyugai, 'n') ? 'nyuin' : 'gairai';
+        return $this->nyugai;
     }
 
-    public function isReduced(): bool
+    public function isElderly(): bool
     {
-        return $this->isReduced;
-    }
-
-    public function isElderly(): ?bool
-    {
-        return $this->isElderly;
+        return $this->generationClassification->isElderly();
     }
 
     public function getPoint(): Point
@@ -48,8 +45,23 @@ class CalculatorParameter
         return $this->point;
     }
 
-    public function getIncomeClassification(): ?string
+    public function hasKogaku(): bool
+    {
+        return !is_null($this->getIncomeClassification())
+            && !is_null($this->getCountState())
+            ;
+    }
+
+    /**
+     * @return null|IncomeClassification|NonElderlyIncomeClassification|ElderlyIncomeClassification
+     */
+    public function getIncomeClassification(): ?IncomeClassification
     {
         return $this->incomeClassification;
+    }
+
+    public function getCountState(): ?KogakuCountState
+    {
+        return $this->countState;
     }
 }

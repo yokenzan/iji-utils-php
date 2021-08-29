@@ -7,8 +7,12 @@ namespace IjiUtils\MedicalFee\Amount\Burden;
 use DateTimeImmutable;
 use DateTimeInterface;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\ElderlyIncomeClassification;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassification;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttributeMaster;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\KogakuCountState;
 use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
 use Psr\Log\LoggerInterface;
 
@@ -16,21 +20,23 @@ class CalculatorParameterBuilder
 {
     public const DEFAULT_PATIENT_BURDEN_RATE = 0.3;
 
-    public ?Point $point;
-    public ?DateTimeInterface $patientBirthDate;
-    public ?DateTimeInterface $standardDate;
-    public ?int $patientAge;
-    public ?string $incomeClassification;
-    public ?bool $isReduced;
-    public ?bool $isElderly;
-    public ?float $burden;
-    public ?bool $isNyuin;
+    public Nyugai                   $nyugai;
+    public ?Point                   $point;
+    public ?DateTimeInterface       $patientBirthDate;
+    public ?DateTimeInterface       $standardDate;
+    public ?int                     $patientAge;
+    public ?IncomeClassification    $incomeClassification;
+    public ?string                  $incomeClassificationKey;
+    public GenerationClassification $generationClassification;
+    public ?float                   $burden;
+    public KogakuCountState         $kogakuCountState;
+
     private IncomeClassificationAttributeMaster $classificationMaster;
-    private LoggerInterface $logger;
+    private LoggerInterface                     $logger;
 
     public function __construct(
         IncomeClassificationAttributeMaster $classificationMaster,
-        LoggerInterface $logger
+        LoggerInterface                     $logger
     ) {
         $this->classificationMaster = $classificationMaster;
         $this->logger               = $logger;
@@ -40,30 +46,32 @@ class CalculatorParameterBuilder
 
     public function build(): CalculatorParameter
     {
-        $this->logger->debug('start build CalculatorParameter...');
+        $this->logger->debug('start building CalculatorParameter...');
 
         $this->detectStandardDate();
+
+        if ($this->incomeClassificationKey) {
+            $this->incomeClassification = $this->convertIncomeClassificationFromKey(
+                $this->incomeClassificationKey
+            );
+        }
+
         $this->detectIsElderly();
         $this->detectBurden();
         $this->detectKogakuIncomeClassification();
 
         $parameter = new CalculatorParameter(
             $this->standardDate,
-            new PatientAttribute(
-                $this->patientBirthDate,
-                $this->patientAge,
-                $this->isElderly,
-            ),
             new RateBasedCalculatorParameter(
                 $this->point,
                 $this->burden,
             ),
             new KogakuRyoyohiCalculatorParameter(
-                $this->point,
-                $this->incomeClassification,
-                $this->isNyuin ? 'nyuin' : 'gairai',
-                $this->isReduced,
-                $this->isElderly,
+                nyugai:                   $this->nyugai,
+                point:                    $this->point,
+                generationClassification: $this->generationClassification,
+                incomeClassification:     $this->incomeClassification,
+                countState:               $this->kogakuCountState,
             ),
         );
 
@@ -78,17 +86,15 @@ class CalculatorParameterBuilder
 
     private function clearState(): void
     {
-        $this->isNyuin = null;
-        $this->point   = null;
-        $this->burden  = null;
-
-        $this->standardDate     = null;
-        $this->patientBirthDate = null;
-        $this->patientAge       = null;
-        $this->isElderly        = null;
-
-        $this->incomeClassification = null;
-        $this->isReduced            = null;
+        $this->point                    = null;
+        $this->burden                   = null;
+        $this->nyugai                   = Nyugai::GAIRAI();
+        $this->standardDate             = null;
+        $this->patientBirthDate         = null;
+        $this->patientAge               = null;
+        $this->generationClassification = GenerationClassification::NORMAL();
+        $this->incomeClassification     = null;
+        $this->incomeClassificationKey  = null;
     }
 
     private function detectStandardDate(): void
@@ -114,26 +120,24 @@ class CalculatorParameterBuilder
     {
         $this->logger->debug('start detecting whether patient is elderly or not...');
 
-        if (!is_null($this->isElderly)) {
-            return;
-        }
-
         $this->patientAge ??= $this->patientBirthDate
             ? $this->standardDate->diff($this->patientBirthDate)->y
             : null;
 
-        if (!is_null($this->patientAge)) {
-            $this->isElderly = $this->patientAge >= 70;
+        if (is_null($this->patientAge)) {
+            $this->generationClassification =
+                $this->incomeClassification?->isElderly()
+                    ? GenerationClassification::LATE_ELDERLY()
+                    : GenerationClassification::NORMAL();
             return;
         }
 
-        if (!is_null($this->incomeClassification)) {
-            $this->isElderly = $this->classificationMaster
-                ->detectIsElderlyOrNotByClassification($this->incomeClassification);
-            return;
-        }
-
-        $this->isElderly = false;
+        $this->generationClassification = match (true) {
+            $this->patientAge >= 75 => GenerationClassification::LATE_ELDERLY(),
+            $this->patientAge >= 70 => GenerationClassification::EARLY_ELDERLY(),
+            $this->patientAge <= 6  => GenerationClassification::PRESCHOOL(),
+            default                 => GenerationClassification::NORMAL(),
+        };
     }
 
     private function detectBurden(): void
@@ -141,13 +145,13 @@ class CalculatorParameterBuilder
         $this->logger->debug("start detecting patient's burden rate...");
 
         if (!is_null($this->burden)) {
-            $this->logger->debug('患者割合が指定されています', [
+            $this->logger->debug('指定された患者割合', [
                 'patient burden rate' => $this->burden,
             ]);
             return;
         }
 
-        if (str_starts_with($this->incomeClassification ?? '', 'upper')) {
+        if ($this->generationClassification->isElderly() && $this->incomeClassification?->isComparableToNonEldery()) {
             $this->logger->debug('所得区分現役並みのため自動設定', [
                 'patient burden rate' => $this->burden,
             ]);
@@ -155,22 +159,9 @@ class CalculatorParameterBuilder
             return;
         }
 
-        if (!is_null($this->patientAge)) {
-            $this->burden = match (true) {
-                $this->patientAge >= 75 => 0.1,
-                $this->patientAge >= 70 => 0.2,
-                $this->patientAge <= 6  => 0.2,
-                default                 => self::DEFAULT_PATIENT_BURDEN_RATE,
-            };
-            $this->logger->debug('年齢から定率負担割合を計算', [
-                'age of patient'      => $this->patientAge,
-                'patient burden rate' => $this->burden,
-            ]);
-            return;
-        }
+        $this->burden = $this->generationClassification->getDefaultBurdenRate();
 
-        $this->burden = self::DEFAULT_PATIENT_BURDEN_RATE;
-        $this->logger->debug('デフォルトの負担割合を適用', [
+        $this->logger->debug('年齢区分から定率負担割合を計算', [
             'age of patient'      => $this->patientAge,
             'patient burden rate' => $this->burden,
         ]);
@@ -180,7 +171,11 @@ class CalculatorParameterBuilder
     {
         $this->logger->debug('start detecting income classification...');
 
-        if (!is_null($this->incomeClassification)) {
+        $this->logger->debug('指定された所得区分', [
+            'income classification' => $this->incomeClassificationKey,
+        ]);
+
+        if (!is_null($this->incomeClassificationKey)) {
             $this->logger->debug('指定された所得区分を適用', [
                 'income classification' => $this->incomeClassification,
             ]);
@@ -191,18 +186,23 @@ class CalculatorParameterBuilder
             'income classification' => $this->incomeClassification,
         ]);
 
-        if (!$this->isElderly) {
+        if ($this->generationClassification->isNonElderly()) {
             return;
         }
 
-        $this->incomeClassification = match ($this->burden) {
-            0.3      => 'upper-3',
-            0.2, 0.1 => 'middle',
+        $this->incomeClassification ??= match ($this->burden) {
+            0.3      => ElderlyIncomeClassification::UPPER_3(),
+            0.2, 0.1 => ElderlyIncomeClassification::MIDDLE(),
             default  => null,
         };
 
         $this->logger->debug('高齢受給者・後期高齢者のため自動適用', [
             'income classification' => $this->incomeClassification,
         ]);
+    }
+
+    private function convertIncomeClassificationFromKey(string $classificationKey): IncomeClassification
+    {
+        return $this->classificationMaster->findIncomeClassificationByKey($classificationKey);
     }
 }

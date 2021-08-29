@@ -10,20 +10,17 @@ use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBased
 
 class CalculatorParameter
 {
-    private DateTimeInterface $standardDate;
-    private PatientAttribute $patientAttribute;
-    private RateBasedCalculatorParameter $rateBasedCalculatorParameter;
+    private DateTimeInterface                $standardDate;
+    private RateBasedCalculatorParameter     $rateBasedCalculatorParameter;
     private KogakuRyoyohiCalculatorParameter $kogakuRyoyohiCalculatorParameter;
 
     public function __construct(
-        DateTimeInterface $standardDate,
-        PatientAttribute $patientAttribute,
-        RateBasedCalculatorParameter $rateBasedCalculatorParameter,
+        DateTimeInterface                $standardDate,
+        RateBasedCalculatorParameter     $rateBasedCalculatorParameter,
         KogakuRyoyohiCalculatorParameter $kogakuRyoyohiCalculatorParameter
     ) {
-        $this->standardDate                 = $standardDate;
-        $this->patientAttribute             = $patientAttribute;
-        $this->rateBasedCalculatorParameter = $rateBasedCalculatorParameter;
+        $this->standardDate                     = $standardDate;
+        $this->rateBasedCalculatorParameter     = $rateBasedCalculatorParameter;
         $this->kogakuRyoyohiCalculatorParameter = $kogakuRyoyohiCalculatorParameter;
     }
 

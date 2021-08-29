@@ -8,18 +8,18 @@ use DateTimeInterface;
 
 class PatientAttribute
 {
-    private ?DateTimeInterface $birthDate;
-    private ?int $age;
-    private bool $isElderly;
+    private ?DateTimeInterface       $birthDate;
+    private ?int                     $age;
+    private GenerationClassification $generationClassification;
 
     public function __construct(
-        ?DateTimeInterface $birthDate,
-        ?int $age,
-        bool $isElderly
+        ?DateTimeInterface       $birthDate,
+        ?int                     $age,
+        GenerationClassification $generationClassification
     ) {
-        $this->birthDate = $birthDate;
-        $this->age       = $age;
-        $this->isElderly = $isElderly;
+        $this->birthDate                = $birthDate;
+        $this->age                      = $age;
+        $this->generationClassification = $generationClassification;
     }
 
     public function calculateAge(DateTimeInterface $standardDate): ?int
@@ -35,6 +35,6 @@ class PatientAttribute
 
     public function isElderly(): bool
     {
-        return $this->isElderly;
+        return $this->generationClassification->isElderly();
     }
 }

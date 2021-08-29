@@ -6,180 +6,169 @@ namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
 
 use Ds\Map;
 use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\ElderlyIncomeClassification as Elderly;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttribute as Attribute;
+use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\NonElderlyIncomeClassification as NonElderly;
+use IjiUtils\MedicalFee\Nyugai;
+use InvalidArgumentException;
 
 class IncomeClassificationAttributeMaster
 {
-    private const KOGAKU_COUNT_IS_REDUCED = 'reduced';
-    private const KOGAKU_COUNT_IS_NORMAL  = 'normal';
-
     /**
-     * @property Map<string, Map<string, IncomeClassificationAttribute>> $nonElderlyIncomeClassifications
+     * @property Map<string, Map<string, Attribute>> $nonElderlyIncomeClassifications
      */
-    private Map $nonElderlyIncomeClassifications;
+    private Map $nonElderlyMaster;
     /**
-     * @property Map<string, Map<string, IncomeClassificationAttribute>> $elderlyIncomeClassifications
+     * @property Map<string, Map<string, Attribute>> $elderlyIncomeClassifications
      */
-    private Map $elderlyIncomeClassifications;
-    /**
-     * @property Map<string, string> $elderlyClassificationKeys
-     */
-    private Map $classificationKeys;
+    private Map $elderlyMaster;
 
     public function __construct()
     {
-        $this->nonElderlyIncomeClassifications = new Map();
-        $this->elderlyIncomeClassifications    = new Map();
-        $this->classificationKeys              = new Map();
+        $this->nonElderlyMaster = new Map();
+        $this->elderlyMaster    = new Map();
 
-        $this->initializeElderlyIncomeClassifications();
-        $this->initializeNonElderlyIncomeClassifications();
-        $this->initializeClassificationKeys();
+        $this->initializeElderlyMaster();
+        $this->initializeNonElderlyMaster();
     }
 
-    public function detect(CalculatorParameter $parameter): IncomeClassificationAttribute
+    public function detect(CalculatorParameter $parameter): Attribute
     {
+        if (!$parameter->hasKogaku()) {
+            throw new InvalidArgumentException();
+        }
+
         $classifications = $parameter->isElderly()
-            ? $this->elderlyIncomeClassifications
-            : $this->nonElderlyIncomeClassifications;
+            ? $this->elderlyMaster
+            : $this->nonElderlyMaster;
 
         return $classifications
-            ->get($parameter->getNyugai())
-            ->get($parameter->isReduced() ? self::KOGAKU_COUNT_IS_REDUCED : self::KOGAKU_COUNT_IS_NORMAL)
-            ->get($parameter->getIncomeClassification());
+            ->get($parameter->getNyugai()->getKey())
+            ->get($parameter->getCountState()->getKey())
+            ->get($parameter->getIncomeClassification()->getKey());
     }
 
-    public function detectIsElderlyOrNotByClassification(string $incomeClassification): bool
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function findIncomeClassificationByKey(string $classificationKey): IncomeClassification
     {
-        return (bool)$this->classificationKeys->get($incomeClassification);
+        return match (true) {
+            NonElderly::isValid($classificationKey) => new NonElderly($classificationKey),
+            Elderly::isValid($classificationKey)    => new Elderly($classificationKey),
+            default                                 => throw new InvalidArgumentException(),
+        };
     }
 
     /**
      * 70歳未満
      */
-    private function initializeNonElderlyIncomeClassifications(): void
+    private function initializeNonElderlyMaster(): void
     {
-        // 通常回
+        $normalParameters  = [
+            ['classification' => NonElderly::A(), 'totalAmount' => 842000, 'basicAmount' => 252600],
+            ['classification' => NonElderly::I(), 'totalAmount' => 558000, 'basicAmount' => 167400],
+            ['classification' => NonElderly::U(), 'totalAmount' => 267000, 'basicAmount' => 80100],
+            ['classification' => NonElderly::E(), 'totalAmount' => null,   'basicAmount' => 57600],
+            ['classification' => NonElderly::O(), 'totalAmount' => null,   'basicAmount' => 35400],
+        ];
+        $reducedParameters = [
+            ['classification' => NonElderly::A(), 'totalAmount' => null, 'basicAmount' => 140100],
+            ['classification' => NonElderly::I(), 'totalAmount' => null, 'basicAmount' => 93000],
+            ['classification' => NonElderly::U(), 'totalAmount' => null, 'basicAmount' => 44400],
+            ['classification' => NonElderly::E(), 'totalAmount' => null, 'basicAmount' => 44400],
+            ['classification' => NonElderly::O(), 'totalAmount' => null, 'basicAmount' => 24600],
+        ];
 
-        $this->nonElderlyIncomeClassifications->put('nyuin', new Map());
-        $this->nonElderlyIncomeClassifications->get('nyuin')->put(
-            self::KOGAKU_COUNT_IS_NORMAL,
-            new Map([
-                'a' => new IncomeClassificationAttribute(Amount::generate(842000), Amount::generate(252600)),
-                'i' => new IncomeClassificationAttribute(Amount::generate(558000), Amount::generate(167400)),
-                'u' => new IncomeClassificationAttribute(Amount::generate(267000), Amount::generate(80100)),
-                'e' => new IncomeClassificationAttribute(null, Amount::generate(57600)),
-                'o' => new IncomeClassificationAttribute(null, Amount::generate(35400)),
-            ])
-        );
+        $nyuinKey     = Nyugai::NYUIN()->getKey();
+        $normalState  = KogakuCountState::NORMAL()->getKey();
+        $reducedState = KogakuCountState::REDUCED()->getKey();
 
-        // 多数回
+        $this->nonElderlyMaster->put($nyuinKey, new Map());
+        $this->nonElderlyMaster->get($nyuinKey)->put($normalState, new Map());
+        $this->nonElderlyMaster->get($nyuinKey)->put($reducedState, new Map());
 
-        $reducedUAndE = new IncomeClassificationAttribute(null, Amount::generate(44400));
+        $this->addIncomeClassifications($normalParameters, false, $nyuinKey, $normalState);
+        $this->addIncomeClassifications($reducedParameters, false, $nyuinKey, $reducedState);
 
-        $this->nonElderlyIncomeClassifications->get('nyuin')->put(
-            'reduced',
-            new Map([
-                'a' => new IncomeClassificationAttribute(null, Amount::generate(140100)),
-                'i' => new IncomeClassificationAttribute(null, Amount::generate(93000)),
-                'u' => $reducedUAndE,
-                'e' => $reducedUAndE,
-                'o' => new IncomeClassificationAttribute(null, Amount::generate(24600)),
-            ])
-        );
-
-        $this->nonElderlyIncomeClassifications->put(
-            'gairai',
-            $this->nonElderlyIncomeClassifications->get('nyuin')
+        $this->nonElderlyMaster->put(
+            Nyugai::GAIRAI()->getKey(),
+            $this->nonElderlyMaster->get($nyuinKey)
         );
     }
 
     /**
      * 70歳以上
      */
-    private function initializeElderlyIncomeClassifications(): void
+    private function initializeElderlyMaster(): void
     {
-        // 通常回
+        $gairaiNormalParameters  = [
+            ['classification' => Elderly::UPPER_3(), 'totalAmount' => 842000, 'basicAmount' => 252600],
+            ['classification' => Elderly::UPPER_2(), 'totalAmount' => 558000, 'basicAmount' => 167400],
+            ['classification' => Elderly::UPPER_1(), 'totalAmount' => 267000, 'basicAmount' => 80100],
+            ['classification' => Elderly::MIDDLE(),  'totalAmount' => null,   'basicAmount' => 18000],
+            ['classification' => Elderly::LOWER_2(), 'totalAmount' => null,   'basicAmount' => 8000],
+            ['classification' => Elderly::LOWER_1(), 'totalAmount' => null,   'basicAmount' => 8000],
+        ];
+        $gairaiReducedParameters = [
+            ['classification' => Elderly::UPPER_3(), 'totalAmount' => null,   'basicAmount' => 140100],
+            ['classification' => Elderly::UPPER_2(), 'totalAmount' => null,   'basicAmount' => 93000],
+            ['classification' => Elderly::UPPER_1(), 'totalAmount' => null,   'basicAmount' => 44400],
+            ['classification' => Elderly::MIDDLE(),  'totalAmount' => null,   'basicAmount' => 44400],
+            ['classification' => Elderly::LOWER_2(), 'totalAmount' => null,   'basicAmount' => 8000],
+            ['classification' => Elderly::LOWER_1(), 'totalAmount' => null,   'basicAmount' => 8000],
+        ];
+        $nyuinNormalParameters   = [
+            ['classification' => Elderly::UPPER_3(), 'totalAmount' => 842000, 'basicAmount' => 252600],
+            ['classification' => Elderly::UPPER_2(), 'totalAmount' => 558000, 'basicAmount' => 167400],
+            ['classification' => Elderly::UPPER_1(), 'totalAmount' => 267000, 'basicAmount' => 80100],
+            ['classification' => Elderly::MIDDLE(),  'totalAmount' => null,   'basicAmount' => 57600],
+            ['classification' => Elderly::LOWER_2(), 'totalAmount' => null,   'basicAmount' => 24600],
+            ['classification' => Elderly::LOWER_1(), 'totalAmount' => null,   'basicAmount' => 15000],
+        ];
+        $nyuinReducedParameters  = [
+            ['classification' => Elderly::UPPER_3(), 'totalAmount' => null,   'basicAmount' => 140100],
+            ['classification' => Elderly::UPPER_2(), 'totalAmount' => null,   'basicAmount' => 93000],
+            ['classification' => Elderly::UPPER_1(), 'totalAmount' => null,   'basicAmount' => 44400],
+            ['classification' => Elderly::MIDDLE(),  'totalAmount' => null,   'basicAmount' => 44400],
+            ['classification' => Elderly::LOWER_2(), 'totalAmount' => null,   'basicAmount' => 24600],
+            ['classification' => Elderly::LOWER_1(), 'totalAmount' => null,   'basicAmount' => 15000],
+        ];
 
-        $this->elderlyIncomeClassifications->put('gairai', new Map());
-        $normalLower = new IncomeClassificationAttribute(null, Amount::generate(8000));
+        $nyuinKey     = Nyugai::NYUIN()->getKey();
+        $gairaiKey    = Nyugai::GAIRAI()->getKey();
+        $normalState  = KogakuCountState::NORMAL()->getKey();
+        $reducedState = KogakuCountState::REDUCED()->getKey();
 
-        $this->elderlyIncomeClassifications->get('gairai')->put(
-            'normal',
-            new Map([
-                'upper-3' => new IncomeClassificationAttribute(Amount::generate(842000), Amount::generate(252600)),
-                'upper-2' => new IncomeClassificationAttribute(Amount::generate(558000), Amount::generate(167400)),
-                'upper-1' => new IncomeClassificationAttribute(Amount::generate(267000), Amount::generate(80100)),
-                'middle'  => new IncomeClassificationAttribute(null, Amount::generate(18000)),
-                'lower-2' => $normalLower,
-                'lower-1' => $normalLower,
-            ])
-        );
+        $this->elderlyMaster->put($gairaiKey, new Map());
+        $this->elderlyMaster->get($gairaiKey)->put($normalState, new Map());
+        $this->elderlyMaster->get($gairaiKey)->put($reducedState, new Map());
 
-        // 多数回
+        $this->addIncomeClassifications($gairaiNormalParameters, true, $gairaiKey, $normalState);
+        $this->addIncomeClassifications($gairaiReducedParameters, true, $gairaiKey, $reducedState);
 
-        $reducedMiddelAndUpper = new IncomeClassificationAttribute(null, Amount::generate(44400));
+        $this->elderlyMaster->put($nyuinKey, new Map());
+        $this->elderlyMaster->get($nyuinKey)->put($normalState, new Map());
+        $this->elderlyMaster->get($nyuinKey)->put($reducedState, new Map());
 
-        $this->elderlyIncomeClassifications->get('gairai')->put(
-            'reduced',
-            new Map([
-                'upper-3' => new IncomeClassificationAttribute(null, Amount::generate(140100)),
-                'upper-2' => new IncomeClassificationAttribute(null, Amount::generate(93000)),
-                'upper-1' => $reducedMiddelAndUpper,
-                'middle'  => $reducedMiddelAndUpper,
-                'lower-2' => $normalLower,
-                'lower-1' => $normalLower,
-            ])
-        );
-
-        $this->elderlyIncomeClassifications->put('nyuin', new Map());
-
-        // 通常回
-
-        $this->elderlyIncomeClassifications->get('nyuin')->put(
-            'normal',
-            new Map([
-                'upper-3' => $this->elderlyIncomeClassifications->get('gairai')->get('normal')->get('upper-3'),
-                'upper-2' => $this->elderlyIncomeClassifications->get('gairai')->get('normal')->get('upper-2'),
-                'upper-1' => $this->elderlyIncomeClassifications->get('gairai')->get('normal')->get('upper-1'),
-                'middle'  => new IncomeClassificationAttribute(null, Amount::generate(57600)),
-                'lower-2' => new IncomeClassificationAttribute(null, Amount::generate(24600)),
-                'lower-1' => new IncomeClassificationAttribute(null, Amount::generate(15000)),
-            ])
-        );
-
-        // 多数回
-
-        $reducedMiddelAndUpper = new IncomeClassificationAttribute(null, Amount::generate(44400));
-
-        $this->elderlyIncomeClassifications->get('nyuin')->put(
-            'reduced',
-            new Map([
-                'upper-3' => new IncomeClassificationAttribute(null, Amount::generate(140100)),
-                'upper-2' => new IncomeClassificationAttribute(null, Amount::generate(93000)),
-                'upper-1' => $reducedMiddelAndUpper,
-                'middle'  => $reducedMiddelAndUpper,
-                'lower-2' => $this->elderlyIncomeClassifications->get('nyuin')->get('normal')->get('lower-2'),
-                'lower-1' => $this->elderlyIncomeClassifications->get('nyuin')->get('normal')->get('lower-1'),
-            ])
-        );
+        $this->addIncomeClassifications($nyuinNormalParameters, true, $nyuinKey, $normalState);
+        $this->addIncomeClassifications($nyuinReducedParameters, true, $nyuinKey, $reducedState);
     }
 
-    private function initializeClassificationKeys(): void
+    private function addIncomeClassifications(array $arrayOfParameters, bool $isElderly, string $nyugaiKey, string $countStateKey): void
     {
-        $elderlyClassificationKeys    = $this->elderlyIncomeClassifications
-            ->get('gairai')
-            ->get('normal')
-            ->keys();
-        $nonElderlyClassificationKeys = $this->nonElderlyIncomeClassifications
-            ->get('gairai')
-            ->get('normal')
-            ->keys();
+        $table = ($isElderly ? $this->elderlyMaster : $this->nonElderlyMaster)
+            ->get($nyugaiKey)
+            ->get($countStateKey);
 
-        foreach ($elderlyClassificationKeys as $classification) {
-            $this->classificationKeys->put($classification, true);
-        }
-        foreach ($nonElderlyClassificationKeys as $classification) {
-            $this->classificationKeys->put($classification, false);
+        foreach ($arrayOfParameters as $parameters) {
+            $table->put(
+                $parameters['classification']->getKey(),
+                new Attribute(
+                    is_null($parameters['totalAmount']) ? null : Amount::generate($parameters['totalAmount']),
+                    Amount::generate($parameters['basicAmount']),
+                )
+            );
         }
     }
 }
