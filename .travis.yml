@@ -1,0 +1,8 @@
+language: php
+php:
+- '8.0'
+script:
+- composer install
+- composer lint:analyze
+- composer lint:stan
+- composer test
