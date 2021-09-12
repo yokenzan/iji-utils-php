@@ -13,6 +13,9 @@ class CalculatePatientBurdenCommandTest extends TestCase
 {
     /**
      * @dataProvider provideCalculateRateBasedBurden
+     * @dataProvider provideCalculateKogakuBasedBurden
+     * @dataProvider provideCalculateNyuinKogakuBasedBurden
+     * @dataProvider provideCalculateElderlyBurden
      */
     public function testCalculateRateBasedBurden(int $point, array $options, int $result)
     {
@@ -103,17 +106,6 @@ class CalculatePatientBurdenCommandTest extends TestCase
                 60000,
             ],
         ];
-    }
-
-    /**
-     * @dataProvider provideCalculateKogakuBasedBurden
-     * @dataProvider provideCalculateNyuinKogakuBasedBurden
-     */
-    public function testCalculateKogakuBasedBurden(int $point, array $options, int $result)
-    {
-        $command = new CommandTester($this->getCommand());
-        $command->execute(['point' => $point] + $options);
-        $this->assertStringContainsString((string)$result, $command->getDisplay());
     }
 
     public function provideCalculateKogakuBasedBurden()
@@ -284,6 +276,76 @@ class CalculatePatientBurdenCommandTest extends TestCase
                     '--receipt-is-nyuin'      => true,
                 ],
                 24600,
+            ],
+        ];
+    }
+
+    public function provideCalculateElderlyBurden()
+    {
+        return [
+            [
+                3000,
+                [
+                    '--patient-age' => 70,
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-age' => 74,
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-age' => 75,
+                ],
+                3000,
+            ],
+
+            // by generation
+
+            [
+                3000,
+                [
+                    '--patient-is-early-elderly' => true,
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-is-late-elderly' => true,
+                ],
+                3000,
+            ],
+
+            // 外に出す
+
+            [
+                3000,
+                [
+                    '--patient-is-preschool' => true,
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-is-preschool'    => true,
+                    '--patient-is-late-elderly' => true,
+                ],
+                3000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-is-early-elderly' => true,
+                    '--patient-is-late-elderly'  => true,
+                ],
+                3000,
             ],
         ];
     }
