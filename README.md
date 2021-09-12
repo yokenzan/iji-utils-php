@@ -1,5 +1,7 @@
 # Iji Utilities
 
+![](https://app.travis-ci.com/yokenzan/iji-utils-php.svg?branch=master)
+
 医事的なユーティリティ(iji-utils)
 
 請求点数から患者負担額を計算します。
@@ -52,6 +54,8 @@ $ bin/console calc:burden 100000 \
   --kogaku-is-reduced
 #=> 140100
 ```
+
+### サブコマンド `list:income-classifications`
 
 ## License
 
