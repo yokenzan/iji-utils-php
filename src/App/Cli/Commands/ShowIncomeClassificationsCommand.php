@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\Cli\Commands;
+namespace IjiUtils\App\Cli\Commands;
 
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\ElderlyIncomeClassification;
 use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\NonElderlyIncomeClassification;

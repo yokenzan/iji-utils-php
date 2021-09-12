@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\Cli\Commands;
+namespace IjiUtils\App\Cli\Commands;
 
 use DateTimeImmutable;
 use IjiUtils\MedicalFee\Amount\Burden\Calculator;
@@ -19,6 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * 患者自己負担額を計算するコマンド
+ */
 class CalculatePatientBurdenCommand extends Command
 {
     /**
