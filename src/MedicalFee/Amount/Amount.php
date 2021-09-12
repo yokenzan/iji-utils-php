@@ -62,7 +62,7 @@ class Amount implements Stringable, JsonSerializable
     public function isGreaterThan(self $other, bool $orEquals = false): bool
     {
         $isGreater = $this->toFloat() > $other->toFloat();
-        $equals    = $this->toFloat() == $other->toFloat();
+        $equals    = $this->toFloat() === $other->toFloat();
 
         return $isGreater || ($orEquals ? $equals : false);
     }

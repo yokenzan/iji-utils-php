@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace IjiUtils\App\Cli;
 
-use IjiUtils\App\Cli\CommandSet;
 use Symfony\Component\Console\Application as ConsoleApplication;
 
 /**
