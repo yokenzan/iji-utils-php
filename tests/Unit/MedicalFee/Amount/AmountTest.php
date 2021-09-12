@@ -107,4 +107,19 @@ class AmountTest extends TestCase
 
         $this->assertEquals(Amount::generate($pointValue * 10 * $burdenRate), $amount);
     }
+
+    public function testCanCompareIfIsGreaterThanAnotherOrNot()
+    {
+        $greaterAmount = Amount::generate(1000);
+        $lessAmount    = Amount::generate(900);
+
+        $this->assertTrue($greaterAmount->isGreaterThan($lessAmount));
+        $this->assertTrue($greaterAmount->isGreaterThan($lessAmount, orEquals: true));
+
+        $equalAmount1 = Amount::generate(1000);
+        $equalAmount2 = Amount::generate(1000.0);
+
+        $this->assertFalse($equalAmount1->isGreaterThan($equalAmount2));
+        $this->assertTrue($equalAmount1->isGreaterThan($equalAmount2, orEquals: true));
+    }
 }
