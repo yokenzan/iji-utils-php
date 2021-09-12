@@ -1,5 +1,6 @@
 " vim: ft=vim
 
+set colorcolumn=120
 let g:ale_linters = { 'php' : [] }
 
 if filereadable(getcwd() . '/vendor/bin/phpcs')
