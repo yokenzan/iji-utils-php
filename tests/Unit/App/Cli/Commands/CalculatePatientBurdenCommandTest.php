@@ -12,95 +12,130 @@ use Tests\TestCase;
 class CalculatePatientBurdenCommandTest extends TestCase
 {
     /**
-     * @dataProvider provideCalculateRateBasedBurden
-     * @dataProvider provideCalculateKogakuBasedBurden
-     * @dataProvider provideCalculateNyuinKogakuBasedBurden
+     * @dataProvider provideCalculateWithPointOnly
+     * @dataProvider provideCalculateFromProvidedPatientAge
+     * @dataProvider provideCalculateFromProvidedPatientBirthDate
      * @dataProvider provideCalculateElderlyBurden
      */
-    public function testCalculateRateBasedBurden(int $point, array $options, int $result)
+    public function testCalculateBurdenAmount(int $point, array $options, int $result)
     {
         $command = new CommandTester($this->getCommand());
         $command->execute(['point' => $point] + $options);
         $this->assertStringContainsString((string)$result, $command->getDisplay());
     }
 
-    public function provideCalculateRateBasedBurden()
+    public function provideCalculateWithPointOnly()
     {
         return [
-
-            // when given point only
-
             [
                 30000,
                 [],
                 90000,
             ],
+        ];
+    }
 
-            // when given burden rate
-
+    public function provideCalculateFromProvidedPatientAge()
+    {
+        return [
             [
-                30000,
+                3000,
                 [
                     '--patient-burden-rate'   => '.3',
                 ],
-                90000,
+                9000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-burden-rate'   => '.2',
                 ],
-                60000,
+                6000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-burden-rate'   => '.1',
                 ],
-                30000,
+                3000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-burden-rate'   => '1',
                 ],
-                300000,
+                30000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-age' => '2',
                 ],
-                60000,
+                6000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-age' => '7',
                 ],
-                90000,
+                9000,
             ],
             [
-                30000,
+                3000,
                 [
                     '--patient-age' => '69',
                 ],
-                90000,
+                9000,
             ],
+            [
+                3000,
+                [
+                    '--patient-age' => '70',
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-age' => '74',
+                ],
+                6000,
+            ],
+            [
+                3000,
+                [
+                    '--patient-age' => '75',
+                ],
+                3000,
+            ],
+        ];
+    }
 
-            // when given birth date
+    public function provideCalculateFromProvidedPatientBirthDate()
+    {
+        $standardDate = '2021-04-01';
 
+        return [
             [
                 30000,
                 [
+                    '--standard-date'      => $standardDate,
                     '--patient-birth-date' => '1987-07-28',
                 ],
                 90000,
             ],
-
             [
                 30000,
                 [
+                    '--standard-date'      => $standardDate,
+                    '--patient-birth-date' => '2020-01-01',
+                ],
+                60000,
+            ],
+            [
+                30000,
+                [
+                    '--standard-date'      => $standardDate,
                     '--patient-birth-date' => '2020-01-01',
                 ],
                 60000,

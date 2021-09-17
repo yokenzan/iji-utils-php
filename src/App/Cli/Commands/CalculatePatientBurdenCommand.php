@@ -58,6 +58,7 @@ class CalculatePatientBurdenCommand extends Command
 
         // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $this
+            ->addOption('standard-date',            's', InputOption::VALUE_REQUIRED, '計算をおこなう診療年月日を指定します。')
             ->addOption('patient-age',              'a', InputOption::VALUE_REQUIRED, '患者年齢を指定します。')
             ->addOption('patient-birth-date',       'd', InputOption::VALUE_REQUIRED, '患者生年月日を指定します。')
             ->addOption('patient-is-early-elderly', 'e', InputOption::VALUE_NONE,     '患者が高齢受給者の場合に指定します。prior to -l and -p')
@@ -106,6 +107,13 @@ class CalculatePatientBurdenCommand extends Command
 
         if ($kogakuCountState->isReduced() && is_null($classificationKey)) {
             throw new InvalidArgumentException();
+        }
+
+        $standardDateText = $input->getOption('standard-date');
+        $standardDate     = $standardDateText ? new DateTimeImmutable($standardDateText) : null;
+
+        if (!is_null($standardDate)) {
+            $this->parameterBuilder->standardDate = $standardDate;
         }
 
         $this->parameterBuilder->patientAge               = $patientAge;
