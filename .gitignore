@@ -4,3 +4,4 @@
 /_phpcs.xml
 /Session.vim
 .phpunit.result.cache
+.php-version
