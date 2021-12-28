@@ -27,7 +27,7 @@ class Modulus10DigitChecker
         return $digits . $this->calculateBottomDigit($digits);
     }
 
-    private function calculateBottomDigit(string $digits): string
+    public function calculateBottomDigit(string $digits): string
     {
         $bottomCoefficient      = 2;
         $nextBottomCoefficiennt = 1;

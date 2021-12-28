@@ -35,6 +35,16 @@ class Modulus10DigitCheckerTest extends TestCase
     }
 
     /**
+     * @dataProvider provideDigitsNumbersLackingBottomDigits
+     */
+    public function testReturnsPossibleBottomDigitWhenIncompletedDigitsGiven(
+        string $incompletedDigits,
+        string $completedDigit
+    ) {
+        $this->assertSame($completedDigit, $this->digitChecker->calculateBottomDigit($incompletedDigits));
+    }
+
+    /**
      * @dataProvider provideInvalidDigitsNumbers
      */
     public function testThrowsExceptionValuesWhenVerifyInvalid8DigitsNumber(string $invalidDigits)
@@ -55,6 +65,20 @@ class Modulus10DigitCheckerTest extends TestCase
             ['54016019'],
             ['12016010'],
             ['010108'],
+        ];
+    }
+
+    public function provideDigitsNumbersLackingBottomDigits()
+    {
+        return [
+            ['0101001', '6'],
+            ['0113001', '2'],
+            ['0120001', '3'],
+            ['3901601', '9'],
+            ['3913601', '5'],
+            ['5401601', '9'],
+            ['1201601', '0'],
+            ['01010',   '8'],
         ];
     }
 
