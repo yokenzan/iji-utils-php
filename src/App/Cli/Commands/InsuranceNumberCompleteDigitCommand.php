@@ -46,7 +46,8 @@ class InsuranceNumberCompleteDigitCommand extends Command
             throw new \Exception('invalid argument');
         }
 
-        $output->writeln($this->digitChecker->completeDigit($digits));
+        $completedDigit = $this->digitChecker->calculateBottomDigit($digits);
+        $output->writeln($this->generateOutputText($digits, $completedDigit));
 
         return Command::SUCCESS;
     }
@@ -54,5 +55,10 @@ class InsuranceNumberCompleteDigitCommand extends Command
     private function isPossibleInsuranceDigitNumber(string $digits): bool
     {
         return preg_match('/^[0-9]{5,8}$/', $digits) === 1;
+    }
+
+    private function generateOutputText(string $digits, string $completedDigit): string
+    {
+        return sprintf('%s<info>%s</info>', $digits, $completedDigit);
     }
 }
