@@ -56,7 +56,7 @@ class GenerationClassification extends Enum
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'key'   => $this->getKey(),

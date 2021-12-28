@@ -61,7 +61,7 @@ class NonElderlyIncomeClassification extends Enum implements IncomeClassificatio
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'value' => $this->getValue(),

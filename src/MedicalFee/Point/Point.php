@@ -29,7 +29,7 @@ class Point implements Stringable, JsonSerializable
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'value'     => $this->toInt(),

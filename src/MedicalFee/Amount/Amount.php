@@ -80,7 +80,7 @@ class Amount implements Stringable, JsonSerializable
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'int_value'   => $this->toInt(),
