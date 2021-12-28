@@ -6,7 +6,7 @@ namespace IjiUtils\App\Cli;
 
 use Ds\Vector;
 use IjiUtils\App\Cli\Commands\CalculatePatientBurdenCommand;
-use IjiUtils\App\Cli\Commands\CheckDigitNumberCommand;
+use IjiUtils\App\Cli\Commands\InsuranceNumberCompleteDigitCommand;
 use IjiUtils\App\Cli\Commands\ShowIncomeClassificationsCommand;
 use Symfony\Component\Console\Application;
 
@@ -20,7 +20,7 @@ class CommandSet
     public function __construct(
         ShowIncomeClassificationsCommand $showIncomeClassificationsCommand,
         CalculatePatientBurdenCommand    $calculatePatientBurdenCommand,
-        CheckDigitNumberCommand          $checkDigitNumberCommand
+        InsuranceNumberCompleteDigitCommand          $checkDigitNumberCommand
     ) {
         $this->commands = new Vector();
 
