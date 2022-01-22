@@ -49,12 +49,16 @@ class InsuranceNumberCompleteDigitCommand extends Command
             throw new \Exception('invalid argument');
         }
 
+        $completedDigitsWithoutBottom = '';
+
         if (!$this->isCompletableDigitNumber($digits)) {
-            $digits .= str_repeat('9', self::INSURER_NUMBER_SHAHO_LENGTH - strlen($digits) - 1);
+            $completedDigitsWithoutBottom = str_repeat('9', self::INSURER_NUMBER_SHAHO_LENGTH - strlen($digits) - 1);
         }
 
-        $completedDigit = $this->digitChecker->calculateBottomDigit($digits);
-        $output->writeln($this->generateOutputText($digits, $completedDigit));
+        $completedBomttomDigit = $this->digitChecker->calculateBottomDigit($digits . $completedDigitsWithoutBottom);
+        $output->writeln(
+            $this->generateOutputText($digits, $completedDigitsWithoutBottom . $completedBomttomDigit)
+        );
 
         return Command::SUCCESS;
     }
