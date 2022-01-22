@@ -18,9 +18,9 @@ class CommandSet
     private Vector $commands;
 
     public function __construct(
-        ShowIncomeClassificationsCommand $showIncomeClassificationsCommand,
-        CalculatePatientBurdenCommand    $calculatePatientBurdenCommand,
-        InsuranceNumberCompleteDigitCommand          $checkDigitNumberCommand
+        ShowIncomeClassificationsCommand    $showIncomeClassificationsCommand,
+        CalculatePatientBurdenCommand       $calculatePatientBurdenCommand,
+        InsuranceNumberCompleteDigitCommand $checkDigitNumberCommand
     ) {
         $this->commands = new Vector();
 
