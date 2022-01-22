@@ -11,6 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InsuranceNumberCompleteDigitCommand extends Command
 {
+    private const INSURER_NUMBER_KOKUHO_LENGTH = 6;
+    private const INSURER_NUMBER_SHAHO_LENGTH  = 8;
+
     /**
      * {@inheritDoc}
      */
@@ -42,8 +45,12 @@ class InsuranceNumberCompleteDigitCommand extends Command
     {
         $digits = $input->getArgument('number');
 
-        if (!$this->isPossibleInsuranceDigitNumber($digits)) {
+        if (!$this->isPossibleDigitNumber($digits)) {
             throw new \Exception('invalid argument');
+        }
+
+        if (!$this->isCompletableDigitNumber($digits)) {
+            $digits .= str_repeat('9', self::INSURER_NUMBER_SHAHO_LENGTH - strlen($digits) - 1);
         }
 
         $completedDigit = $this->digitChecker->calculateBottomDigit($digits);
@@ -52,9 +59,31 @@ class InsuranceNumberCompleteDigitCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function isPossibleInsuranceDigitNumber(string $digits): bool
+    private function isCompletableDigitNumber(string $digits): bool
     {
-        return preg_match('/^[0-9]{5,8}$/', $digits) === 1;
+        // whether consists of digits only
+
+        if (preg_match('/^[0-9]+$/', $digits) !== 1) {
+            return false;
+        }
+
+        // whether lacks 1 digit
+
+        $digitLength      = strlen($digits);
+        $lengthsCompleted = [
+            self::INSURER_NUMBER_KOKUHO_LENGTH,
+            self::INSURER_NUMBER_SHAHO_LENGTH,
+        ];
+        if (!in_array($digitLength + 1, $lengthsCompleted, true)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isPossibleDigitNumber(string $digits): bool
+    {
+        return preg_match('/^[0-9]{2,7}$/', $digits) === 1;
     }
 
     private function generateOutputText(string $digits, string $completedDigit): string
