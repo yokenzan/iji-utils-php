@@ -13,6 +13,7 @@ class InsuranceNumberCompleteDigitCommand extends Command
 {
     private const INSURER_NUMBER_KOKUHO_LENGTH = 6;
     private const INSURER_NUMBER_SHAHO_LENGTH  = 8;
+    private const DUMMY_DIGIT                  = '1';
 
     /**
      * {@inheritDoc}
@@ -43,21 +44,24 @@ class InsuranceNumberCompleteDigitCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $digits = $input->getArgument('number');
+        $givenDigits = $input->getArgument('number');
 
-        if (!$this->isPossibleDigitNumber($digits)) {
+        if (is_null($givenDigits)) {
             throw new \Exception('invalid argument');
         }
 
-        $completedDigitsWithoutBottom = '';
-
-        if (!$this->isCompletableDigitNumber($digits)) {
-            $completedDigitsWithoutBottom = str_repeat('9', self::INSURER_NUMBER_SHAHO_LENGTH - strlen($digits) - 1);
+        if (!$this->onlyConsistsWithNumbers($givenDigits)) {
+            throw new \Exception('invalid argument');
         }
 
-        $completedBomttomDigit = $this->digitChecker->calculateBottomDigit($digits . $completedDigitsWithoutBottom);
+        $dummyDigits = !$this->isCompletableDigitNumber($givenDigits)
+            ? $this->getDummyDigits($givenDigits)
+            : '';
+
+        $completedBomttomDigit = $this->digitChecker->calculateBottomDigit($givenDigits . $dummyDigits);
+
         $output->writeln(
-            $this->generateOutputText($digits, $completedDigitsWithoutBottom . $completedBomttomDigit)
+            $this->generateOutputText($givenDigits, $dummyDigits . $completedBomttomDigit)
         );
 
         return Command::SUCCESS;
@@ -85,13 +89,21 @@ class InsuranceNumberCompleteDigitCommand extends Command
         return true;
     }
 
-    private function isPossibleDigitNumber(string $digits): bool
+    private function onlyConsistsWithNumbers(string $digits): bool
     {
         return preg_match('/^[0-9]{2,7}$/', $digits) === 1;
     }
 
-    private function generateOutputText(string $digits, string $completedDigit): string
+    private function generateOutputText(string $original, string $completed): string
     {
-        return sprintf('%s<info>%s</info>', $digits, $completedDigit);
+        return sprintf('%s<info>%s</info>', $original, $completed);
+    }
+
+    private function getDummyDigits(string $digits): string
+    {
+        return str_repeat(
+            self::DUMMY_DIGIT,
+            self::INSURER_NUMBER_SHAHO_LENGTH - strlen($digits) - 1
+        );
     }
 }
