@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
 use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
 use IjiUtils\MedicalFee\Nyugai;

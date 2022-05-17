@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\ElderlyIncomeClassification;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassification;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttributeMaster;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\KogakuCountState;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\ElderlyIncomeClassification;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassification;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassificationAttributeMaster;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\KogakuCountState;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
 use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
 use Psr\Log\LoggerInterface;

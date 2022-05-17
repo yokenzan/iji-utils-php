@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\Calculator as KogakuRyoyohiCalculator;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\Calculator as RateBasedCalculator;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorResult as RateBasedCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\Calculator as KogakuRyoyohiCalculator;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\Calculator as RateBasedCalculator;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
 
 class Calculator
 {

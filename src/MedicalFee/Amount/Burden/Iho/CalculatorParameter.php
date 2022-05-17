@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
 use DateTimeInterface;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
 use JsonSerializable;
 
 class CalculatorParameter implements JsonSerializable

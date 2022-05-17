@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
 use Ds\Map;
 use IjiUtils\MedicalFee\Amount\Amount;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\ElderlyIncomeClassification as Elderly;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\IncomeClassificationAttribute as Attribute;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\NonElderlyIncomeClassification as NonElderly;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\ElderlyIncomeClassification as Elderly;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassificationAttribute as Attribute;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\NonElderlyIncomeClassification as NonElderly;
 use IjiUtils\MedicalFee\Nyugai;
 use InvalidArgumentException;
 

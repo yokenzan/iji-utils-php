@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden\RateBased;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased;
 
 use IjiUtils\MedicalFee\Amount\Amount;
 

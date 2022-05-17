@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount\Burden;
+namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
 use IjiUtils\MedicalFee\Amount\Amount;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
-use IjiUtils\MedicalFee\Amount\Burden\RateBased\CalculatorResult as RateBasedCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable

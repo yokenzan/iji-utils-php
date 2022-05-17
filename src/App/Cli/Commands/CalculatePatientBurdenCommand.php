@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace IjiUtils\App\Cli\Commands;
 
 use DateTimeImmutable;
-use IjiUtils\MedicalFee\Amount\Burden\Calculator;
-use IjiUtils\MedicalFee\Amount\Burden\CalculatorParameterBuilder;
 use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
-use IjiUtils\MedicalFee\Amount\Burden\KogakuRyoyohi\KogakuCountState;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\Calculator;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\CalculatorParameterBuilder;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\KogakuCountState;
 use IjiUtils\MedicalFee\Nyugai;
 use IjiUtils\MedicalFee\Point\Point;
 use InvalidArgumentException;
