@@ -13,14 +13,12 @@ class CalculatorParameter implements JsonSerializable
 {
     private Point             $point;
     private ?Amount           $amountLimit;
-    // private ?CalculatorResult $upperResult;
     private ?Amount           $upperBurdenAmount;
     private float             $burden;
 
     public function __construct(
         Point   $point,
         ?Amount $amountLimit,
-        // ?CalculatorResult $upperResult,
         ?Amount $upperBurdenAmount,
         float   $burden = 1.0
     ) {

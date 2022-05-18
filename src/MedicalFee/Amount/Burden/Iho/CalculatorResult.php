@@ -61,7 +61,7 @@ class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
      */
     public function getDiffBetweenRateAndLimit(): ?Amount
     {
-        if (!$this->providesByUpperLimit()) {
+        if (!$this->providesByLimit()) {
             return null;
         }
 
@@ -73,7 +73,7 @@ class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
     /**
      * {@inheritDoc}
      */
-    public function providesByUpperLimit(): bool
+    public function providesByLimit(): bool
     {
         return $this->isKogakuApplied;
     }
@@ -97,7 +97,7 @@ class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
     /**
      * {@inheritDoc}
      */
-    public function hasSubsidyByUpperLimit(): bool
+    public function hasSubsidyByLimit(): bool
     {
         return $this->getParameter()->hasKogaku();
     }
@@ -121,7 +121,7 @@ class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
     /**
      * {@inheritDoc}
      */
-    // public function getUpperLimitAmount(): ?Amount
+    // public function getLimitAmount(): ?Amount
     // {
     // }
 
@@ -136,9 +136,9 @@ class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
     /**
      * {@inheritDoc}
      */
-    public function getBurdenAmountByUpperLimit(): ?Amount
+    public function getBurdenAmountByLimit(): ?Amount
     {
-        return $this->hasSubsidyByUpperLimit()
+        return $this->hasSubsidyByLimit()
             ? $this->getKogakuRyoyohiResult()->getBurdenAmount()
             : null;
     }

@@ -19,7 +19,7 @@ interface BurdenBreakdownInterface
     /**
      * 上限額の助成をもつか？
      */
-    public function hasSubsidyByUpperLimit(): bool;
+    public function hasSubsidyByLimit(): bool;
 
     /* 実際に助成が適用されたか */
 
@@ -31,7 +31,7 @@ interface BurdenBreakdownInterface
     /**
      * 上限額の助成による給付が発生したか？
      */
-    public function providesByUpperLimit(): bool;
+    public function providesByLimit(): bool;
 
     /* 按分比率 */
 
@@ -40,7 +40,7 @@ interface BurdenBreakdownInterface
      */
     public function getBurdenRate(): float;
 
-    // public function getUpperLimitAmount(): ?Amount;
+    // public function getLimitAmount(): ?Amount;
 
     /* 実際の給付・負担 */
 
@@ -52,7 +52,7 @@ interface BurdenBreakdownInterface
     /**
      * この制度の上限額の助成による負担金額を返します。
      */
-    public function getBurdenAmountByUpperLimit(): ?Amount;
+    public function getBurdenAmountByLimit(): ?Amount;
 
     /**
      * この制度による最終的な患者の窓口一部負担金を返します
