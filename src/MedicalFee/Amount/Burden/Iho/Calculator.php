@@ -13,7 +13,7 @@ use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBase
 
 class Calculator
 {
-    private RateBasedCalculator $rateBasedCalculator;
+    private RateBasedCalculator     $rateBasedCalculator;
     private KogakuRyoyohiCalculator $kogakuAppliedCalculator;
 
     public function __construct(
@@ -34,19 +34,19 @@ class Calculator
             return new CalculatorResult(
                 parameter:       $parameter,
                 rateBasedResult: $rateBasedResult,
-                burdenAmount:    $rateBasedResult->getAmount()
+                burdenAmount:    $rateBasedResult->getBurdenAmount()
             );
         }
 
         $kogakuAppliedResult = $this->calculateKogakuRyoyohi(
             $parameter->getKogakuRyoyohiParameter()
         );
-        $isKogakuApplied     = $rateBasedResult->getAmount()->isGreaterThan(
-            $kogakuAppliedResult->getAmount(),
+        $isKogakuApplied     = $rateBasedResult->getBurdenAmount()->isGreaterThan(
+            $kogakuAppliedResult->getBurdenAmount(),
         );
         $burdenAmount        = $isKogakuApplied
-            ? $kogakuAppliedResult->getAmount()
-            : $rateBasedResult->getAmount();
+            ? $kogakuAppliedResult->getBurdenAmount()
+            : $rateBasedResult->getBurdenAmount();
 
         return new CalculatorResult(
             parameter:           $parameter,

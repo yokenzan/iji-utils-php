@@ -132,8 +132,8 @@ class CalculatePatientBurdenCommand extends Command
 
         $output->writeln(
             $showWithCommaSeparated
-                ? (string)$result->getAmount()
-                : (string)$result->getAmount()->toInt()
+                ? (string)$result->getBurdenAmount()
+                : (string)$result->getBurdenAmount()->toInt()
         );
 
         return Command::SUCCESS;

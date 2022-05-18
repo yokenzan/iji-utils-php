@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
 use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\Amount\Burden\Contracts\BurdenBreakdownInterface;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
+use IjiUtils\MedicalFee\Point\Point;
 use JsonSerializable;
 
-class CalculatorResult implements JsonSerializable
+class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
 {
     private CalculatorParameter            $parameter;
     private RateBasedCalculatorResult      $rateBasedResult;
@@ -46,23 +48,32 @@ class CalculatorResult implements JsonSerializable
         return $this->kogakuAppliedResult;
     }
 
-    public function getAmount(): Amount
+    /**
+     * {@inheritDoc}
+     */
+    public function getBurdenAmount(): Amount
     {
         return $this->amount;
     }
 
-    public function getReducedAmountByKogaku(): Amount
+    /**
+     * {@inheritDoc}
+     */
+    public function getDiffBetweenRateAndLimit(): ?Amount
     {
-        if (!$this->isKogakuApplied()) {
-            return Amount::generate(0);
+        if (!$this->providesByUpperLimit()) {
+            return null;
         }
 
-        return $this->getRateBasedResult()->getAmount()->sub(
-            $this->getKogakuRyoyohiResult()->getAmount()
+        return $this->getRateBasedResult()->getBurdenAmount()->sub(
+            $this->getKogakuRyoyohiResult()->getBurdenAmount()
         );
     }
 
-    public function isKogakuApplied(): bool
+    /**
+     * {@inheritDoc}
+     */
+    public function providesByUpperLimit(): bool
     {
         return $this->isKogakuApplied;
     }
@@ -73,5 +84,72 @@ class CalculatorResult implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasSubsidyByRate(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasSubsidyByUpperLimit(): bool
+    {
+        return $this->getParameter()->hasKogaku();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function providesByRate(): bool
+    {
+        return (int)$this->getBurdenRate() !== 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBurdenRate(): float
+    {
+        return $this->getParameter()->getRateBasedParameter()->getBurdenRate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    // public function getUpperLimitAmount(): ?Amount
+    // {
+    // }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBurdenAmountByRate(): ?Amount
+    {
+        return $this->getRateBasedResult()->getBurdenAmount();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBurdenAmountByUpperLimit(): ?Amount
+    {
+        return $this->hasSubsidyByUpperLimit()
+            ? $this->getKogakuRyoyohiResult()->getBurdenAmount()
+            : null;
+    }
+
+    public function getPoint(): Point
+    {
+        return $this->getParameter()->getRateBasedParameter()->getPoint();
+    }
+
+    public function getTargetAmount(): Amount
+    {
+        return Amount::fromPoint($this->getParameter()->getRateBasedParameter()->getPoint());
     }
 }

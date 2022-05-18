@@ -9,6 +9,9 @@ use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as K
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
 use JsonSerializable;
 
+/**
+ * 医療保険の窓口負担金計算をおこなうためのパラメタ
+ */
 class CalculatorParameter implements JsonSerializable
 {
     private DateTimeInterface                $standardDate;
@@ -25,21 +28,33 @@ class CalculatorParameter implements JsonSerializable
         $this->kogakuRyoyohiCalculatorParameter = $kogakuRyoyohiCalculatorParameter;
     }
 
+    /**
+     * 負担割合側のパラメタ
+     */
     public function getRateBasedParameter(): RateBasedCalculatorParameter
     {
         return $this->rateBasedCalculatorParameter;
     }
 
+    /**
+     * 高額療養費側のパラメタ
+     */
     public function getKogakuRyoyohiParameter(): KogakuRyoyohiCalculatorParameter
     {
         return $this->kogakuRyoyohiCalculatorParameter;
     }
 
+    /**
+     * 基準日を返します
+     */
     public function getStandardDate(): DateTimeInterface
     {
         return $this->standardDate;
     }
 
+    /**
+     * 高額療養費情報が設定されているか？
+     */
     public function hasKogaku(): bool
     {
         return !is_null($this->getKogakuRyoyohiParameter()->getIncomeClassification());

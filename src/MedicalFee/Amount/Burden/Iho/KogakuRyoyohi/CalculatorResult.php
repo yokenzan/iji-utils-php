@@ -23,7 +23,10 @@ class CalculatorResult implements JsonSerializable
         return $this->parameter;
     }
 
-    public function getAmount(): Amount
+    /**
+     * 一部負担金を返します
+     */
+    public function getBurdenAmount(): Amount
     {
         return $this->amount;
     }

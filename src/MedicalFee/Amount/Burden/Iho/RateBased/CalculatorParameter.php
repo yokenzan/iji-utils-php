@@ -7,16 +7,19 @@ namespace IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased;
 use IjiUtils\MedicalFee\Point\Point;
 use JsonSerializable;
 
+/**
+ * 医療保険の負担割合による助成内容を定義するパラメタ
+ */
 class CalculatorParameter implements JsonSerializable
 {
     private Point $point;
 
-    private float $burden;
+    private float $burdenRate;
 
-    public function __construct(Point $point, float $burden = 1.0)
+    public function __construct(Point $point, float $burdenRate = 1.0)
     {
-        $this->point  = $point;
-        $this->burden = $burden;
+        $this->point      = $point;
+        $this->burdenRate = $burdenRate;
     }
 
     public function getPoint(): Point
@@ -24,9 +27,9 @@ class CalculatorParameter implements JsonSerializable
         return $this->point;
     }
 
-    public function getBurden(): float
+    public function getBurdenRate(): float
     {
-        return $this->burden;
+        return $this->burdenRate;
     }
 
     /**

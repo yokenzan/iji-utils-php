@@ -10,7 +10,7 @@ use JsonSerializable;
 class CalculatorResult implements JsonSerializable
 {
     private CalculatorParameter $parameter;
-    private Amount $amount;
+    private Amount              $amount;
 
     public function __construct(CalculatorParameter $parameter, Amount $amount)
     {
@@ -23,7 +23,10 @@ class CalculatorResult implements JsonSerializable
         return $this->parameter;
     }
 
-    public function getAmount(): Amount
+    /**
+     * 一部負担金を返します
+     */
+    public function getBurdenAmount(): Amount
     {
         return $this->amount;
     }
