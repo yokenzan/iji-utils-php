@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased;
 
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 
 /**
  * 医療保険の負担割合による助成内容を定義するパラメタ
  */
-class CalculatorParameter implements JsonSerializable
+class Input implements JsonSerializable
 {
     private Point $point;
 

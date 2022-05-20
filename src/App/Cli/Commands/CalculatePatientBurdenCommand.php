@@ -10,7 +10,7 @@ use IjiUtils\MedicalFee\Amount\Burden\Iho\Calculator;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\CalculatorParameterBuilder;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\KogakuCountState;
 use IjiUtils\MedicalFee\Nyugai;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;

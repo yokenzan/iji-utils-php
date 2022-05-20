@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Amount;
+namespace IjiUtils\MedicalFee\ValueObjects;
 
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 use Stringable;
 

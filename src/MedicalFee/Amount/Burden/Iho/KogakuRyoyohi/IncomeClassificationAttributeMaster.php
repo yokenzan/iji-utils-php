@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
 use Ds\Map;
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\ElderlyIncomeClassification as Elderly;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassificationAttribute as Attribute;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\NonElderlyIncomeClassification as NonElderly;
@@ -32,20 +32,20 @@ class IncomeClassificationAttributeMaster
         $this->initializeNonElderlyMaster();
     }
 
-    public function detect(CalculatorParameter $parameter): Attribute
+    public function detect(Input $input): Attribute
     {
-        if (!$parameter->hasKogaku()) {
+        if (!$input->hasKogaku()) {
             throw new InvalidArgumentException();
         }
 
-        $classifications = $parameter->isElderly()
+        $classifications = $input->isElderly()
             ? $this->elderlyMaster
             : $this->nonElderlyMaster;
 
         return $classifications
-            ->get($parameter->getNyugai()->getKey())
-            ->get($parameter->getCountState()->getKey())
-            ->get($parameter->getIncomeClassification()->getKey());
+            ->get($input->getNyugai()->getKey())
+            ->get($input->getCountState()->getKey())
+            ->get($input->getIncomeClassification()->getKey());
     }
 
     /**

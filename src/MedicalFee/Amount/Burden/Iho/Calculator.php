@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\Calculator as KogakuRyoyohiCalculator;
-use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\Input as KogakuRyoyohiInput;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\Calculator as RateBasedCalculator;
-use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\Input as RateBasedInput;
 
 class Calculator
 {
@@ -24,22 +24,22 @@ class Calculator
         $this->kogakuAppliedCalculator = $kogakuAppliedCalculator;
     }
 
-    public function calculate(CalculatorParameter $parameter): CalculatorResult
+    public function calculate(Input $input): CalculatorResult
     {
         $rateBasedResult = $this->calculateRateBased(
-            $parameter->getRateBasedParameter()
+            $input->getRateBasedParameter()
         );
 
-        if (!$parameter->hasKogaku()) {
+        if (!$input->hasKogaku()) {
             return new CalculatorResult(
-                parameter:       $parameter,
+                input:           $input,
                 rateBasedResult: $rateBasedResult,
                 burdenAmount:    $rateBasedResult->getBurdenAmount()
             );
         }
 
         $kogakuAppliedResult = $this->calculateKogakuRyoyohi(
-            $parameter->getKogakuRyoyohiParameter()
+            $input->getKogakuRyoyohiParameter()
         );
         $isKogakuApplied     = $rateBasedResult->getBurdenAmount()->isGreaterThan(
             $kogakuAppliedResult->getBurdenAmount(),
@@ -49,7 +49,7 @@ class Calculator
             : $rateBasedResult->getBurdenAmount();
 
         return new CalculatorResult(
-            parameter:           $parameter,
+            input:               $input,
             rateBasedResult:     $rateBasedResult,
             burdenAmount:        $burdenAmount,
             kogakuAppliedResult: $kogakuAppliedResult,
@@ -58,14 +58,14 @@ class Calculator
     }
 
     private function calculateRateBased(
-        RateBasedCalculatorParameter $parameter
+        RateBasedInput $input
     ): RateBasedCalculatorResult {
-        return $this->rateBasedCalculator->calculate($parameter);
+        return $this->rateBasedCalculator->calculate($input);
     }
 
     private function calculateKogakuRyoyohi(
-        KogakuRyoyohiCalculatorParameter $parameter
+        KogakuRyoyohiInput $input
     ): KogakuRyoyohiCalculatorResult {
-        return $this->kogakuAppliedCalculator->calculate($parameter);
+        return $this->kogakuAppliedCalculator->calculate($input);
     }
 }

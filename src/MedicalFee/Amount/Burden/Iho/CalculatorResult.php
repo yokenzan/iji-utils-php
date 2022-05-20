@@ -4,38 +4,38 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Contracts\BurdenBreakdownInterface;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface
 {
-    private CalculatorParameter            $parameter;
+    private Input                          $input;
     private RateBasedCalculatorResult      $rateBasedResult;
     private ?KogakuRyoyohiCalculatorResult $kogakuAppliedResult;
     private Amount                         $amount;
     private bool                           $isKogakuApplied;
 
     public function __construct(
-        CalculatorParameter            $parameter,
+        Input                          $input,
         RateBasedCalculatorResult      $rateBasedResult,
         Amount                         $burdenAmount,
         ?KogakuRyoyohiCalculatorResult $kogakuAppliedResult = null,
         bool                           $isKogakuApplied = false
     ) {
-        $this->parameter           = $parameter;
+        $this->input               = $input;
         $this->rateBasedResult     = $rateBasedResult;
         $this->kogakuAppliedResult = $kogakuAppliedResult;
         $this->amount              = $burdenAmount;
         $this->isKogakuApplied     = $isKogakuApplied;
     }
 
-    public function getParameter(): CalculatorParameter
+    public function getParameter(): Input
     {
-        return $this->parameter;
+        return $this->input;
     }
 
     public function getRateBasedResult(): RateBasedCalculatorResult

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\Marucho;
 
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Contracts\BurdenBreakdownInterface;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface

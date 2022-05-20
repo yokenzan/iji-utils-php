@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\Marucho;
 
-use IjiUtils\MedicalFee\Amount\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\CalculatorResult as UpperResult;
-use IjiUtils\MedicalFee\Amount\Burden\Iho\Marucho\CalculatorResult;
 
 class Calculator
 {

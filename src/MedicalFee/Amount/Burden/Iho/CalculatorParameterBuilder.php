@@ -7,14 +7,14 @@ namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 use DateTimeImmutable;
 use DateTimeInterface;
 use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
-use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorParameter as KogakuRyoyohiCalculatorParameter;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\ElderlyIncomeClassification;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassification;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassificationAttributeMaster;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\Input as KogakuRyoyohiInput;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\KogakuCountState;
-use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorParameter as RateBasedCalculatorParameter;
+use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\Input as RateBasedInput;
 use IjiUtils\MedicalFee\Nyugai;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use Psr\Log\LoggerInterface;
 
 class CalculatorParameterBuilder
@@ -43,7 +43,7 @@ class CalculatorParameterBuilder
         $this->clearState();
     }
 
-    public function build(): CalculatorParameter
+    public function build(): Input
     {
         $this->logger->debug('start building CalculatorParameter...');
 
@@ -59,13 +59,13 @@ class CalculatorParameterBuilder
         $this->detectBurden();
         $this->detectKogakuIncomeClassification();
 
-        $parameter = new CalculatorParameter(
+        $parameter = new Input(
             $this->standardDate,
-            new RateBasedCalculatorParameter(
+            new RateBasedInput(
                 $this->point,
                 $this->burden,
             ),
-            new KogakuRyoyohiCalculatorParameter(
+            new KogakuRyoyohiInput(
                 nyugai:                   $this->nyugai,
                 point:                    $this->point,
                 generationClassification: $this->generationClassification,

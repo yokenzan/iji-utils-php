@@ -6,13 +6,13 @@ namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
 use IjiUtils\MedicalFee\Amount\Burden\GenerationClassification;
 use IjiUtils\MedicalFee\Nyugai;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 
 /**
  * 医療保険の高額療養費所得区分による助成内容を定義するパラメタ
  */
-class CalculatorParameter implements JsonSerializable
+class Input implements JsonSerializable
 {
     private Nyugai                   $nyugai;
     private GenerationClassification $generationClassification;

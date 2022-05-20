@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\Point;
+namespace IjiUtils\MedicalFee\ValueObjects;
 
 use JsonSerializable;
 use Stringable;

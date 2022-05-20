@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased;
 
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable
 {
-    private CalculatorParameter $parameter;
-    private Amount              $amount;
+    private Input  $input;
+    private Amount $amount;
 
-    public function __construct(CalculatorParameter $parameter, Amount $amount)
+    public function __construct(Input $input, Amount $amount)
     {
-        $this->parameter = $parameter;
-        $this->amount    = $amount;
+        $this->input  = $input;
+        $this->amount = $amount;
     }
 
-    public function getParameter(): CalculatorParameter
+    public function getParameter(): Input
     {
-        return $this->parameter;
+        return $this->input;
     }
 
     /**

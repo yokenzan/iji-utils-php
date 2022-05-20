@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
-use IjiUtils\MedicalFee\Amount\Amount;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Point;
 
 /**
  * 高額療養費限度額を計算する
@@ -19,19 +19,19 @@ class Calculator
         $this->incomeClassifications = $incomeClassifications;
     }
 
-    public function calculate(CalculatorParameter $parameter): CalculatorResult
+    public function calculate(Input $input): CalculatorResult
     {
         $amount = $this->calculateAmount(
-            $parameter->getPoint(),
-            $this->detectIncomeClassification($parameter)
+            $input->getPoint(),
+            $this->detectIncomeClassification($input)
         );
 
-        return new CalculatorResult($parameter, $amount);
+        return new CalculatorResult($input, $amount);
     }
 
-    private function detectIncomeClassification(CalculatorParameter $parameter): IncomeClassificationAttribute
+    private function detectIncomeClassification(Input $input): IncomeClassificationAttribute
     {
-        return $this->incomeClassifications->detect($parameter);
+        return $this->incomeClassifications->detect($input);
     }
 
     private function calculateAmount(

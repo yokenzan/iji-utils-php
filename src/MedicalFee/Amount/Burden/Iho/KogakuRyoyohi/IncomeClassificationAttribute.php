@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalFee\ValueObjects\Amount;
 
 class IncomeClassificationAttribute
 {
