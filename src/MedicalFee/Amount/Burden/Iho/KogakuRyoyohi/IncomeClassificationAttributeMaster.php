@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi;
 
 use Ds\Map;
-use IjiUtils\MedicalFee\ValueObjects\Amount;
+use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\ElderlyIncomeClassification as Elderly;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\IncomeClassificationAttribute as Attribute;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\NonElderlyIncomeClassification as NonElderly;

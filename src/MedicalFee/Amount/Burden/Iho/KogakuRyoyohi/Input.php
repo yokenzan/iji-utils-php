@@ -15,7 +15,7 @@ use JsonSerializable;
 class Input implements JsonSerializable
 {
     private Nyugai                   $nyugai;
-    private GenerationClassification $generationClassification;
+    // private GenerationClassification $generationClassification;
     private Point                    $point;
     private ?IncomeClassification    $incomeClassification;
     private ?KogakuCountState        $countState;
@@ -23,13 +23,13 @@ class Input implements JsonSerializable
     public function __construct(
         Nyugai                   $nyugai,
         Point                    $point,
-        GenerationClassification $generationClassification,
+        // GenerationClassification $generationClassification,
         ?IncomeClassification    $incomeClassification = null,
         ?KogakuCountState        $countState = null,
     ) {
         $this->nyugai                   = $nyugai;
         $this->point                    = $point;
-        $this->generationClassification = $generationClassification;
+        // $this->generationClassification = $generationClassification;
         $this->incomeClassification     = $incomeClassification;
         $this->countState               = $countState;
     }
@@ -41,7 +41,8 @@ class Input implements JsonSerializable
 
     public function isElderly(): bool
     {
-        return $this->generationClassification->isElderly();
+        // return $this->generationClassification->isElderly();
+        return $this->incomeClassification->isElderly();
     }
 
     public function getPoint(): Point

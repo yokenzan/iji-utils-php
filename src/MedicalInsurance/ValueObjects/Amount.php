@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace IjiUtils\MedicalFee\ValueObjects;
+namespace IjiUtils\MedicalInsurance\ValueObjects;
 
 use IjiUtils\MedicalFee\ValueObjects\Point;
 use JsonSerializable;
 use Stringable;
 
+/**
+ * 負担・請求金額
+ */
 class Amount implements Stringable, JsonSerializable
 {
     /**
@@ -20,10 +23,12 @@ class Amount implements Stringable, JsonSerializable
         return new static($amount);
     }
 
-    public static function fromPoint(Point $point, float $burden = 1.0): static
+    public static function fromPoint(Point $point, BurdenRate|float $burden = 1.0): static
     {
         return static::generate(
-            $point->toInt() * self::CONVERSION_RATE_FROM_POINT * $burden
+            $point->toInt()
+                * self::CONVERSION_RATE_FROM_POINT
+                * ($burden instanceof BurdenRate ? $burden->toFloat() : $burden)
         );
     }
 
@@ -34,9 +39,9 @@ class Amount implements Stringable, JsonSerializable
         $this->amount = (float)$amount;
     }
 
-    public function round(): static
+    public function round(int $precision = 0): static
     {
-        return static::generate(round($this->amount));
+        return static::generate(round($this->amount, $precision));
     }
 
     public function toInt(): int
@@ -72,8 +77,11 @@ class Amount implements Stringable, JsonSerializable
         return static::generate($this->amount / $diviser);
     }
 
-    public function applyBurden(float $burden): static
+    public function applyBurden(BurdenRate|float $burden): static
     {
+        if ($burden instanceof BurdenRate) {
+            return static::generate($this->amount * $burden->toFloat());
+        }
         return static::generate($this->amount * $burden);
     }
 
