@@ -15,4 +15,6 @@ interface BenefitWayInterface
     public function getPatientBurdenDescription(): string;
 
     public function getInsurerBurdenDescription(): string;
+
+    public function getBurdenSummary(): string;
 }

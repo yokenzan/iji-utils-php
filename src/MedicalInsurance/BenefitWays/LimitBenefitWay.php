@@ -40,6 +40,22 @@ class LimitBenefitWay implements BenefitWayInterface
     /**
      * {@inheritDoc}
      */
+    public function getBurdenSummary(): string
+    {
+        return (string)$this->limit;
+    }
+    //
+    // /**
+    //  * {@inheritDoc}
+    //  */
+    // public function getBenefitWay(): string
+    // {
+    //     return '上限額';
+    // }
+
+    /**
+     * {@inheritDoc}
+     */
     private function calculateBurdenAmount(Input $_inputFromUpper): Amount
     {
         return $this->limit;

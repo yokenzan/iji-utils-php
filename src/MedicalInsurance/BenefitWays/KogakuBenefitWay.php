@@ -57,6 +57,14 @@ class KogakuBenefitWay implements BenefitWayInterface
     /**
      * {@inheritDoc}
      */
+    public function getBurdenSummary(): string
+    {
+        return $this->getPatientBurdenDescription();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     private function calculateBurdenAmount(Input $inputFromUpper): Amount
     {
         $point          = $inputFromUpper->getPoint();

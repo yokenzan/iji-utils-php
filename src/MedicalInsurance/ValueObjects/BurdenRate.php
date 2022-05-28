@@ -44,6 +44,11 @@ class BurdenRate implements Stringable, JsonSerializable
         return self::generate(1.0 - $this->rate);
     }
 
+    public function toPercentage(): string
+    {
+        return sprintf('%d%%', $this->rate * 100);
+    }
+
     /**
      * {@inheritDoc}
      */

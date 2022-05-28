@@ -27,7 +27,7 @@ class RateBenefitWay implements BenefitWayInterface
      */
     public function getPatientBurdenDescription(): string
     {
-        return sprintf('x%s', $this->burdenRate);
+        return sprintf('x%s', $this->burdenRate->toPercentage());
     }
 
     /**
@@ -35,9 +35,25 @@ class RateBenefitWay implements BenefitWayInterface
      */
     public function getInsurerBurdenDescription(): string
     {
-        return sprintf('x%s', $this->burdenRate->opposite());
+        return sprintf('x%s', $this->burdenRate->opposite()->toPercentage());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getBurdenSummary(): string
+    {
+        return $this->burdenRate->toPercentage();
+    }
+
+    // /**
+    //  * {@inheritDoc}
+    //  */
+    // public function getBenefitWay(): string
+    // {
+    //     return '負担割合';
+    // }
+    //
     /**
      * {@inheritDoc}
      */
@@ -53,9 +69,4 @@ class RateBenefitWay implements BenefitWayInterface
     {
         return $burdenAmount->round(-1);
     }
-
-    // public function getBurdenRate(): BurdenRate
-    // {
-    //     return $this->burdenRate;
-    // }
 }

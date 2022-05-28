@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalInsurance;
 
 use Ds\Vector;
+use IjiUtils\MedicalInsurance\BenefitWays\BenefitCategory;
 use IjiUtils\MedicalInsurance\BenefitWays\KogakuBenefitWay;
 use IjiUtils\MedicalInsurance\BenefitWays\LimitBenefitWay;
 use IjiUtils\MedicalInsurance\BenefitWays\RateBenefitWay;
 use InvalidArgumentException;
-use UnexpectedValueException;
 
 /**
  * 助成
@@ -61,6 +61,11 @@ class Insurance
         return !is_null($this->limitBenefit);
     }
 
+    public function getInsurerType(): InsurerType
+    {
+        return $this->insurerType;
+    }
+
     /**
      * @return Vector<InsuranceBenefit>
      */
@@ -72,29 +77,21 @@ class Insurance
             $benefits->push(new InsuranceBenefit(
                 $this->rateBenefit,
                 $this,
-                match (true) {
-                    $this->insurerType->equals(InsurerType::IHO())  => InsurerType::IHO(),
-                    $this->insurerType->equals(InsurerType::KOHI()) => InsurerType::KOHI(),
-                    default => throw new UnexpectedValueException('invalid insurer type'),
-                }
+                BenefitCategory::fromBenefitWayAndInsurerType($this->rateBenefit, $this->insurerType)
             ));
         }
         if ($this->hasKogakuBenefit()) {
             $benefits->push(new InsuranceBenefit(
                 $this->kogakuBenefit,
                 $this,
-                InsurerType::KOGAKU()
+                BenefitCategory::fromBenefitWayAndInsurerType($this->kogakuBenefit, $this->insurerType)
             ));
         }
         if ($this->hasLimitBenefit()) {
             $benefits->push(new InsuranceBenefit(
                 $this->limitBenefit,
                 $this,
-                match (true) {
-                    $this->insurerType->equals(InsurerType::IHO())  => InsurerType::MARUCHO(),
-                    $this->insurerType->equals(InsurerType::KOHI()) => InsurerType::KOHI(),
-                    default => throw new UnexpectedValueException('invalid insurer type'),
-                }
+                BenefitCategory::fromBenefitWayAndInsurerType($this->limitBenefit, $this->insurerType)
             ));
         }
 

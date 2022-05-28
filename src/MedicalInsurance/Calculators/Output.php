@@ -9,16 +9,16 @@ use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 
 class Output
 {
-    private Input           $input;
-    private Amount          $burdenAmount;
+    private Input             $input;
+    private Amount            $burdenAmount;
     private ?InsuranceBenefit $benefit;
-    private bool            $isBenefited;
+    private bool              $isBenefited;
 
     public function __construct(
-        Input           $input,
-        Amount          $burdenAmount,
+        Input             $input,
+        Amount            $burdenAmount,
         ?InsuranceBenefit $benefit,
-        bool            $isBenefited
+        bool              $isBenefited
     ) {
         $this->input        = $input;
         $this->burdenAmount = $burdenAmount;
@@ -40,7 +40,8 @@ class Output
     {
         return $this->isBenefited()
             ? $this->getTargetAmount()->sub($this->getBurdenAmount())
-            : Amount::generate(0);
+            : Amount::generate(0)
+            ;
     }
 
     public function getTargetAmount(): Amount
