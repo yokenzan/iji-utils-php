@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Iho;
 
-use IjiUtils\MedicalFee\ValueObjects\Amount;
 use IjiUtils\MedicalFee\Amount\Burden\Contracts\BurdenBreakdownInterface;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\KogakuRyoyohi\CalculatorResult as KogakuRyoyohiCalculatorResult;
 use IjiUtils\MedicalFee\Amount\Burden\Iho\RateBased\CalculatorResult as RateBasedCalculatorResult;
 use IjiUtils\MedicalFee\ValueObjects\Point;
+use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable, BurdenBreakdownInterface

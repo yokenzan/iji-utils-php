@@ -66,11 +66,10 @@ class CalculatorParameterBuilder
                 $this->burden,
             ),
             new KogakuRyoyohiInput(
-                nyugai:                   $this->nyugai,
-                point:                    $this->point,
-                generationClassification: $this->generationClassification,
-                incomeClassification:     $this->incomeClassification,
-                countState:               $this->kogakuCountState,
+                nyugai:               $this->nyugai,
+                point:                $this->point,
+                incomeClassification: $this->incomeClassification,
+                countState:           $this->kogakuCountState,
             ),
         );
 

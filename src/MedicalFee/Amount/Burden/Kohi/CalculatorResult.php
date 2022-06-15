@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Kohi;
 
-use IjiUtils\MedicalFee\Amount\Amount;
+use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 use JsonSerializable;
 
 class CalculatorResult implements JsonSerializable

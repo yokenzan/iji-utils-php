@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalFee\Amount\Burden\Contracts;
 
-use IjiUtils\MedicalFee\Amount\Amount;
-use IjiUtils\MedicalFee\Point\Point;
+use IjiUtils\MedicalFee\ValueObjects\Point;
+use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 
 interface BurdenBreakdownInterface
 {
