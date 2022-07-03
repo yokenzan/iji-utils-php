@@ -10,25 +10,19 @@ use MyCLabs\Enum\Enum;
  * {@inheritDoc}
  *
  * @method static self IHO()
-//  * @method static self KOGAKU()
-//  * @method static self MARUCHO()
  * @method static self KOHI()
  */
 class InsurerType extends Enum
 {
-    private const IHO     = '医保';
-    // private const KOGAKU  = '高額';
-    // private const MARUCHO = 'マル長';
-    private const KOHI    = '公費';
+    private const IHO  = '医保';
+    private const KOHI = '公費';
 
     /**
      * @var array<string, string>
      */
     private static array $NAMES = [
-        self::IHO     => '医療保険',
-        // self::KOGAKU  => '高額療養費',
-        // self::MARUCHO => '長期高額療養費',
-        self::KOHI    => '公費',
+        self::IHO  => '医療保険',
+        self::KOHI => '公費',
     ];
 
     /**

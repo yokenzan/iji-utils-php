@@ -19,7 +19,7 @@ use UnexpectedValueException;
 class BenefitCategory extends Enum
 {
     private const RATE    = '負担割合';
-    private const KOGAKU  = '所得区分';
+    private const KOGAKU  = '高額療養費';
     private const MARUCHO = 'マル長';
     private const LIMIT   = '上限額';
 

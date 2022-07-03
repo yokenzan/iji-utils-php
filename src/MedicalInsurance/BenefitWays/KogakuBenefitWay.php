@@ -51,7 +51,7 @@ class KogakuBenefitWay implements BenefitWayInterface
      */
     public function getInsurerBurdenDescription(): string
     {
-        return '';
+        return '高額療養費';
     }
 
     /**

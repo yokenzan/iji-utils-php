@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IjiUtils\MedicalInsurance\BurdenBreakdown;
 
 use IjiUtils\MedicalInsurance\BenefitWays\BenefitCategory;
+use IjiUtils\MedicalInsurance\Insurance;
 use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 use JsonSerializable;
 
@@ -17,16 +18,19 @@ class Node implements JsonSerializable
     private ?Node            $left;
     private ?Node            $right;
     private ?Node            $parent;
+    private Insurance        $insurance;
 
     public function __construct(
         ?string          $label = null,
         ?string          $description = null,
         Amount           $amount,
+        Insurance        $insurance,
         ?BenefitCategory $category = null
     ) {
         $this->label       = $label;
         $this->description = $description;
         $this->amount      = $amount;
+        $this->insurance   = $insurance;
         $this->category    = $category;
         $this->parent      = null;
         $this->left        = null;
@@ -113,6 +117,11 @@ class Node implements JsonSerializable
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getInsurance(): Insurance
+    {
+        return $this->insurance;
     }
 
     protected function setParent(Node $parent): self

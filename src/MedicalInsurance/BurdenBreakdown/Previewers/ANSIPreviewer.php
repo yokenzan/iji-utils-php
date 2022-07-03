@@ -116,7 +116,7 @@ class ANSIPreviewer implements PreviewerInterface
 
         while ($node = $node->getLeft()) {
             $category = $node->getCategory();
-            $label    = sprintf('[%s]', $category->isKogaku() ? $category : $node->getLabel());
+            $label    = sprintf('[%s]', $category->isKogaku() ? $category : $node->getInsurance()?->getDescription());
             $text    .= sprintf(
                 " \e[36m%s \e[0m\e(0%s\e(B",
                 $label,

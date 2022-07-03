@@ -46,14 +46,6 @@ class RateBenefitWay implements BenefitWayInterface
         return $this->burdenRate->toPercentage();
     }
 
-    // /**
-    //  * {@inheritDoc}
-    //  */
-    // public function getBenefitWay(): string
-    // {
-    //     return '負担割合';
-    // }
-    //
     /**
      * {@inheritDoc}
      */

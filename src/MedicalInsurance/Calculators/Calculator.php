@@ -15,23 +15,17 @@ class Calculator
      */
     public function calculate(iterable $insurances, Input $input): iterable
     {
-        $benefitsFromInsurances = $insurances->map(fn (Insurance $insurance) => $insurance->toBenefits());
-        $flattenBenefits        = new Vector();
-
-        foreach ($benefitsFromInsurances as $benefits) {
-            foreach ($benefits as $benefit) {
-                $flattenBenefits->push($benefit);
-            }
-        }
-
         $inputFromUpper = $input;
         $outputs        = new Vector();
 
-        /** @var \IjiUtils\MedicalInsurance\AppliedBenefit $benefit */
-        foreach ($flattenBenefits as $benefit) {
-            $output         = $benefit->calculate($inputFromUpper);
-            $inputFromUpper = $this->generateInputFromOutput($output);
-            $outputs->push($output);
+        foreach ($insurances as $insurance) {
+            $insuranceOutput = new InsuranceOutput($inputFromUpper, $insurance);
+            foreach ($insurance as $benefit) {
+                $output         = $benefit->calculate($insurance, $inputFromUpper);
+                $inputFromUpper = $this->generateInputFromOutput($output);
+                $insuranceOutput->addChild($output);
+            }
+            $outputs->push($insuranceOutput);
         }
 
         return $outputs;

@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace IjiUtils\MedicalInsurance;
 
+use ArrayIterator;
 use Ds\Vector;
 use IjiUtils\MedicalInsurance\BenefitWays\BenefitCategory;
 use IjiUtils\MedicalInsurance\BenefitWays\KogakuBenefitWay;
 use IjiUtils\MedicalInsurance\BenefitWays\LimitBenefitWay;
 use IjiUtils\MedicalInsurance\BenefitWays\RateBenefitWay;
 use InvalidArgumentException;
+use IteratorAggregate;
+use Traversable;
 
 /**
  * 助成
  */
-class Insurance
+class Insurance implements IteratorAggregate
 {
     private string            $description;
     private ?RateBenefitWay   $rateBenefit;
@@ -69,7 +72,7 @@ class Insurance
     /**
      * @return Vector<InsuranceBenefit>
      */
-    public function toBenefits(): Vector
+    public function __toBenefits(): Vector
     {
         $benefits = new Vector();
 
@@ -96,5 +99,42 @@ class Insurance
         }
 
         return $benefits;
+    }
+
+    /**
+     * @return Vector<\IjiUtils\MedicalInsurance\BenefitWays\BenefitWayInterface>
+     */
+    public function toBenefits(): Vector
+    {
+        $benefits = new Vector();
+
+        if ($this->hasRateBenefit()) {
+            $benefits->push($this->rateBenefit);
+        }
+        if ($this->hasKogakuBenefit()) {
+            $benefits->push($this->kogakuBenefit);
+        }
+        if ($this->hasLimitBenefit()) {
+            $benefits->push($this->limitBenefit);
+        }
+
+        return $benefits;
+    }
+
+    /**
+     * @return Traversable<\IjiUtils\MedicalInsurance\BenefitWays\BenefitWayInterface>
+     */
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->toBenefits()->toArray());
+    }
+
+    /**
+     * @return Traversable<InsuranceBenefit>
+     */
+    public function __getIterator(): Traversable
+    {
+        return new ArrayIterator($this->toBenefits()->toArray());
+        // return new ArrayIterator();
     }
 }

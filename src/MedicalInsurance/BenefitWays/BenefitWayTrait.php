@@ -6,7 +6,7 @@ namespace IjiUtils\MedicalInsurance\BenefitWays;
 
 use IjiUtils\MedicalInsurance\Calculators\Input;
 use IjiUtils\MedicalInsurance\Calculators\Output;
-use IjiUtils\MedicalInsurance\InsuranceBenefit;
+use IjiUtils\MedicalInsurance\Insurance;
 use IjiUtils\MedicalInsurance\ValueObjects\Amount;
 
 trait BenefitWayTrait
@@ -19,16 +19,26 @@ trait BenefitWayTrait
     /**
      * {@inheritDoc}
      */
-    public function calculate(InsuranceBenefit $appliedBenefit, Input $inputFromUpper): Output
+    public function calculate(Insurance $insurance, Input $inputFromUpper): Output
     {
         $burdenAmount = $this->calculateBurdenAmount($inputFromUpper);
         $targetAmount = $inputFromUpper->getTargetAmount();
 
         return new Output(
-            $inputFromUpper,
-            min($targetAmount, $burdenAmount),
-            $appliedBenefit,
-            $targetAmount->isGreaterThan($burdenAmount)
+            input:        $inputFromUpper,
+            burdenAmount: min($targetAmount, $burdenAmount),
+            insurance:    $insurance,
+            benefit:      $this,
+            category:     $this->resolveCategory($insurance),
+            isBenefited:  $targetAmount->isGreaterThan($burdenAmount)
+        );
+    }
+
+    private function resolveCategory(Insurance $insurance): BenefitCategory
+    {
+        return BenefitCategory::fromBenefitWayAndInsurerType(
+            benefitWay:  $this,
+            insurerType: $insurance->getInsurerType()
         );
     }
 }

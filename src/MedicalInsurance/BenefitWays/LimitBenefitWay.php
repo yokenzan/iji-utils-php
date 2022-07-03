@@ -34,7 +34,7 @@ class LimitBenefitWay implements BenefitWayInterface
      */
     public function getInsurerBurdenDescription(): string
     {
-        return '';
+        return '差額';
     }
 
     /**
@@ -44,14 +44,6 @@ class LimitBenefitWay implements BenefitWayInterface
     {
         return (string)$this->limit;
     }
-    //
-    // /**
-    //  * {@inheritDoc}
-    //  */
-    // public function getBenefitWay(): string
-    // {
-    //     return '上限額';
-    // }
 
     /**
      * {@inheritDoc}

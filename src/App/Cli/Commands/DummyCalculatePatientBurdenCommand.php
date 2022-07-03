@@ -113,8 +113,7 @@ class DummyCalculatePatientBurdenCommand extends Command
                 ->setHeaders([$title, $insurance->getDescription()])
             ;
 
-            /** @var \IjiUtils\MedicalInsurance\InsuranceBenefit $benefit */
-            foreach ($insurance->toBenefits() as $benefit) {
+            foreach ($insurance->__toBenefits() as $benefit) {
                 $table->addRow([$benefit->getCategory(), $benefit->getBurdenSummary()]);
             }
 

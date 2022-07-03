@@ -6,11 +6,11 @@ namespace IjiUtils\MedicalInsurance\BenefitWays;
 
 use IjiUtils\MedicalInsurance\Calculators\Input;
 use IjiUtils\MedicalInsurance\Calculators\Output;
-use IjiUtils\MedicalInsurance\InsuranceBenefit;
+use IjiUtils\MedicalInsurance\Insurance;
 
 interface BenefitWayInterface
 {
-    public function calculate(InsuranceBenefit $appliedBenefit, Input $inputFromUpper): Output;
+    public function calculate(Insurance $insurance, Input $inputFromUpper): Output;
 
     public function getPatientBurdenDescription(): string;
 
